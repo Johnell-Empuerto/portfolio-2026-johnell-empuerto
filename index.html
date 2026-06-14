@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="A modern software engineer portfolio with Three.js and GSAP animations."
+    />
+    <title>Johnell Empuerto | Software Engineer</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./styles.css?v=20260614-profile-static" />
+  </head>
+
+  <body>
+    <div class="noise" aria-hidden="true"></div>
+    <div class="cursor" aria-hidden="true">
+      <span></span>
+    </div>
+
+    <div class="scroll-progress" aria-hidden="true"></div>
+    <div class="ambient-stage" aria-hidden="true">
+      <span class="ambient-ribbon ribbon-one" data-depth="-130"></span>
+      <span class="ambient-ribbon ribbon-two" data-depth="110"></span>
+      <span class="ambient-ribbon ribbon-three" data-depth="-80"></span>
+      <span class="ambient-wire wire-one" data-depth="70"></span>
+      <span class="ambient-wire wire-two" data-depth="-95"></span>
+      <span class="ambient-mesh" data-depth="55"></span>
+    </div>
+
+    <header class="site-header">
+      <a href="#top" class="brand" aria-label="Go to top">
+        <span class="brand-mark">JE</span>
+        <span>Johnell Empuerto</span>
+      </a>
+
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="#about">About</a>
+        <a href="#story">Profile</a>
+        <a href="#skills">Stack</a>
+        <a href="#experience">Experience</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </nav>
+
+      <a class="header-cta" href="#contact">Let’s Talk</a>
+
+      <button class="hamburger" aria-label="Toggle menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </header>
+
+    <div class="mobile-menu" aria-hidden="true">
+      <div class="mobile-menu-glow"></div>
+      <div class="mobile-menu-brand">JE</div>
+      <nav class="mobile-nav">
+        <a href="#about">About</a>
+        <a href="#story">Profile</a>
+        <a href="#skills">Stack</a>
+        <a href="#experience">Experience</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <div class="mobile-menu-footer">
+        <p>Let’s build something impactful</p>
+        <a href="mailto:johnellempuerto.dev@gmail.com"
+          >johnellempuerto.dev@gmail.com</a
+        >
+      </div>
+    </div>
+
+    <main id="top">
+      <section class="hero section" id="hero">
+        <div class="hero-copy">
+          <p class="eyebrow reveal">
+            Cebu City, Philippines · Available for opportunities
+          </p>
+          <h1 class="hero-title split-text">Johnell Empuerto</h1>
+          <p class="hero-subtitle reveal">
+            Software Engineer · Full Stack Developer · Manufacturing Systems
+            Developer
+          </p>
+          <p
+            class="hero-subtitle reveal"
+            style="margin-top: 6px; font-size: 0.95rem; color: var(--muted-2)"
+          >
+            johnellempuerto.dev@gmail.com · +63 969 062 2194
+          </p>
+
+          <div class="hero-actions reveal">
+            <a href="#projects" class="button button-primary">View My Work</a>
+            <a
+              href="https://github.com/Johnell-Empuerto"
+              target="_blank"
+              rel="noreferrer"
+              class="button button-secondary"
+              >GitHub</a
+            >
+            <a
+              href="https://linkedin.com/in/johnell-empuerto-a894a7276"
+              target="_blank"
+              rel="noreferrer"
+              class="button button-secondary"
+              >LinkedIn</a
+            >
+          </div>
+
+          <div class="hero-metrics reveal" aria-label="Portfolio highlights">
+            <div>
+              <strong class="count" data-count="3">0</strong><span>+</span>
+              <p>Years building</p>
+            </div>
+            <div>
+              <strong class="count" data-count="20">0</strong><span>+</span>
+              <p>Projects shipped</p>
+            </div>
+            <div>
+              <strong class="count" data-count="6">0</strong><span>+</span>
+              <p>Clients served</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-card reveal" aria-label="Featured profile card">
+          <div class="orb-card">
+            <div class="developer-stage" aria-hidden="true">
+              <canvas class="developer-canvas"></canvas>
+              <span class="dev-chip chip-react">React</span>
+              <span class="dev-chip chip-angular">Angular</span>
+              <span class="dev-chip chip-node">Node-RED</span>
+              <span class="dev-chip chip-sql">SQL</span>
+            </div>
+            <div class="orb-card-header" style="margin-bottom: 10px">
+              <span class="status-dot"></span>
+              Open for opportunities
+            </div>
+            <div class="code-window">
+              <div class="code-dots"><i></i><i></i><i></i></div>
+              <pre><code><span class="token-purple">const</span> engineer = {
+  name: <span class="token-green">"Johnell"</span>,
+  role: [<span class="token-green">"Software Engineer"</span>, <span class="token-green">"FS Developer"</span>],
+  frontend: [<span class="token-blue">"React"</span>, <span class="token-blue">"Angular"</span>, <span class="token-blue">"Flutter"</span>],
+  backend: [<span class="token-blue">"Node-RED"</span>, <span class="token-blue">"Express"</span>, <span class="token-blue">"PHP"</span>],
+  databases: [<span class="token-blue">"PostgreSQL"</span>, <span class="token-blue">"MySQL"</span>, <span class="token-blue">"Oracle"</span>],
+  industry: [<span class="token-green">"Manufacturing"</span>, <span class="token-green">"Web"</span>, <span class="token-green">"IoT"</span>],
+  build: () => { plan(); build(); ship(); <span class="token-purple">return</span> impact; }
+};</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="marquee-section" aria-label="Technologies">
+        <div class="marquee-track">
+          <span>ReactJS</span>
+          <span>AngularJS</span>
+          <span>Flutter</span>
+          <span>Node-RED</span>
+          <span>ExpressJS</span>
+          <span>Grafana</span>
+          <span>PostgreSQL</span>
+          <span>MySQL</span>
+          <span>Oracle</span>
+          <span>PHP</span>
+          <span>Laravel</span>
+          <span>Firebase</span>
+          <span>ReactJS</span>
+          <span>AngularJS</span>
+          <span>Flutter</span>
+          <span>Node-RED</span>
+          <span>ExpressJS</span>
+          <span>Grafana</span>
+          <span>PostgreSQL</span>
+          <span>MySQL</span>
+          <span>Oracle</span>
+          <span>PHP</span>
+          <span>Laravel</span>
+          <span>Firebase</span>
+        </div>
+      </section>
+
+      <section class="section split-section" id="about">
+        <div class="section-kicker reveal">About</div>
+        <div class="split-content">
+          <div>
+            <h2 class="section-title reveal">
+              Building systems that power manufacturing.
+            </h2>
+            <p class="section-copy reveal">
+              Software Engineer with experience in manufacturing systems,
+              production monitoring dashboards, HR/payroll systems, web
+              development, and cross-platform applications. Skilled in ReactJS,
+              AngularJS, Flutter, Node-RED, ExpressJS, Grafana, SQL Server,
+              PostgreSQL, MySQL, and REST API integration.
+            </p>
+            <p class="section-copy reveal">
+              Experienced in building real-time production systems used by
+              operators and supervisors in automotive and electronics
+              industries. Strong background in paperless production systems,
+              dashboard analytics, workflow automation, and manufacturing
+              reporting solutions using iReporter (Rakupad) from BENG Japan.
+            </p>
+          </div>
+
+          <div class="about-panel reveal">
+            <div class="panel-row">
+              <span>01</span>
+              <div>
+                <h3>Manufacturing Systems</h3>
+                <p>
+                  Real-time production dashboards, paperless reporting, KPI
+                  monitoring for automotive & electronics.
+                </p>
+              </div>
+            </div>
+            <div class="panel-row">
+              <span>02</span>
+              <div>
+                <h3>Full Stack Web</h3>
+                <p>
+                  ReactJS, AngularJS, ExpressJS, PHP with PostgreSQL, MySQL,
+                  Oracle, SQL Server.
+                </p>
+              </div>
+            </div>
+            <div class="panel-row">
+              <span>03</span>
+              <div>
+                <h3>Cross-Platform Apps</h3>
+                <p>
+                  Flutter mobile apps with Firebase, ESP32 IoT integration, and
+                  smart system solutions.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section story-section" id="story" data-profile-section>
+        <div class="story-copy">
+          <div class="section-kicker reveal">Profile</div>
+          <h2 class="section-title story-title reveal" data-no-scroll-split>
+            Practical software for real-world operations.
+          </h2>
+
+          <div class="story-body" aria-label="Johnell Empuerto profile">
+            <p class="story-line reveal">
+              I'm Johnell Empuerto, a Software Engineer based in Cebu City,
+              Philippines. I build manufacturing systems, production dashboards,
+              HR/payroll platforms, paperless reporting workflows, and
+              cross-platform applications.
+            </p>
+            <p class="story-line reveal">
+              My work focuses on creating practical systems used by operators,
+              supervisors, and business teams in real environments. I enjoy
+              turning manual processes into faster, cleaner, and more reliable
+              digital solutions using ReactJS, AngularJS, Flutter, ExpressJS,
+              Node-RED, Grafana, PostgreSQL, MySQL, Oracle, and REST API
+              integrations.
+            </p>
+            <p class="story-line reveal">
+              I'm especially interested in manufacturing technology, dashboard
+              analytics, workflow automation, IoT integration, and systems that
+              improve daily operations.
+            </p>
+          </div>
+
+          <div class="story-tags" aria-label="Focus areas">
+            <span class="reveal">Manufacturing Tech</span>
+            <span class="reveal">Dashboards</span>
+            <span class="reveal">Automation</span>
+            <span class="reveal">IoT Systems</span>
+          </div>
+        </div>
+
+        <figure
+          class="story-photo reveal"
+          aria-label="Johnell Empuerto profile photo"
+        >
+          <img
+            src="./images/img3.png"
+            alt="Formal portrait of Johnell Empuerto"
+          />
+          <figcaption>Software Engineer</figcaption>
+        </figure>
+      </section>
+
+      <span class="section-anchor" id="skills" aria-hidden="true"></span>
+      <section class="section skills-section">
+        <div class="section-kicker reveal">Stack</div>
+        <h2 class="section-title center stack-title reveal">
+          Core skills & technologies.
+        </h2>
+
+        <div class="skills-grid">
+          <article class="skill-card reveal">
+            <span class="skill-icon">⚛</span>
+            <h3>Frontend</h3>
+            <p>
+              ReactJS, AngularJS, Flutter, HTML5, CSS3, JavaScript, Bootstrap,
+              Tailwind CSS
+            </p>
+          </article>
+          <article class="skill-card reveal">
+            <span class="skill-icon">⚙</span>
+            <h3>Backend & Databases</h3>
+            <p>
+              Node-RED, ExpressJS, PHP, Laravel, Firebase, SQL Server,
+              PostgreSQL, MySQL, Oracle
+            </p>
+          </article>
+          <article class="skill-card reveal">
+            <span class="skill-icon">◈</span>
+            <h3>Industrial Systems</h3>
+            <p>
+              Grafana, iReporter (Rakupad), KPI Dashboards, Production
+              Monitoring, QR Systems, Paperless Reporting
+            </p>
+          </article>
+          <article class="skill-card reveal">
+            <span class="skill-icon">✦</span>
+            <h3>Tools & Platforms</h3>
+            <p>
+              GitHub, VS Code, Visual Studio, Android Studio, XAMPP, cPanel,
+              FileZilla
+            </p>
+          </article>
+          <article class="skill-card reveal">
+            <span class="skill-icon">◎</span>
+            <h3>Programming Languages</h3>
+            <p>JavaScript, PHP, Python, Dart, Java, C#, C/C++</p>
+          </article>
+          <article class="skill-card reveal">
+            <span class="skill-icon">↗</span>
+            <h3>AI & Methodologies</h3>
+            <p>
+              ChatGPT, GitHub Copilot, Grok, DeepSeek · Agile Development, REST
+              APIs, Responsive Design
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section experience-section" id="experience">
+        <div class="section-kicker reveal">Experience</div>
+        <h2 class="section-title reveal">Professional journey.</h2>
+
+        <div class="experience-list">
+          <article class="experience-card reveal">
+            <div class="experience-meta">
+              <span class="experience-date">2025 – Present</span>
+              <h3>Software Engineer — NPAX</h3>
+              <p class="experience-clients">
+                Clients: Isuzu, Honda, Taiyo Yuden, Asahi Group Japan, Fuji
+                Electric Philippines
+              </p>
+            </div>
+            <div class="experience-details">
+              <ul>
+                <li>
+                  Developed web, desktop, and mobile production systems used
+                  daily by operators and supervisors
+                </li>
+                <li>
+                  Built real-time dashboards using Grafana, PostgreSQL, MySQL,
+                  and Oracle
+                </li>
+                <li>
+                  Developed customized ReactJS and ExpressJS dashboard/chart
+                  systems for production analytics
+                </li>
+                <li>
+                  Implemented paperless production solutions using iReporter
+                  (Rakupad) from BENG Japan
+                </li>
+                <li>
+                  Customized iReporter workflows, forms, and reporting systems
+                  based on client requirements
+                </li>
+                <li>
+                  Developed Daily Production Entry systems for operator
+                  reporting and machine monitoring
+                </li>
+                <li>
+                  Built REST API integrations for manufacturing systems and
+                  reporting platforms
+                </li>
+              </ul>
+              <div class="experience-tags">
+                <span>ReactJS</span><span>AngularJS</span><span>Flutter</span
+                ><span>ExpressJS</span><span>Node-RED</span><span>Grafana</span
+                ><span>PostgreSQL</span><span>MySQL</span><span>Oracle</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="experience-card reveal">
+            <div class="experience-meta">
+              <span class="experience-date">2024</span>
+              <h3>
+                Website Developer — Bexte Touristik
+                <span class="experience-badge">Part-time</span>
+              </h3>
+              <p class="experience-clients">Remote</p>
+            </div>
+            <div class="experience-details">
+              <ul>
+                <li>
+                  Developed responsive tourism website using HTML, CSS, PHP, and
+                  Bootstrap
+                </li>
+                <li>
+                  Built custom modules for tour listings, contact forms, and
+                  location services
+                </li>
+                <li>Improved mobile responsiveness and website performance</li>
+                <li>Managed updates for promotions and tourism packages</li>
+              </ul>
+              <div class="experience-tags">
+                <span>HTML</span><span>CSS</span><span>PHP</span
+                ><span>Bootstrap</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="experience-card reveal">
+            <div class="experience-meta">
+              <span class="experience-date">2023 – 2024</span>
+              <h3>Website Developer — Proweaver Inc.</h3>
+              <p class="experience-clients">Cebu City, Philippines</p>
+            </div>
+            <div class="experience-details">
+              <ul>
+                <li>Developed custom WordPress themes and plugins</li>
+                <li>
+                  Customized websites using PHP, HTML, CSS, and JavaScript
+                </li>
+                <li>
+                  Built responsive and SEO-friendly websites for international
+                  clients
+                </li>
+                <li>
+                  Improved website speed, performance, and user experience
+                </li>
+              </ul>
+              <div class="experience-tags">
+                <span>PHP</span><span>HTML</span><span>CSS</span
+                ><span>JavaScript</span><span>WordPress</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="experience-card reveal">
+            <div class="experience-meta">
+              <span class="experience-date">2022 – 2023</span>
+              <h3>Freelancer — Web & Embedded Systems Developer</h3>
+              <p class="experience-clients">Philippines</p>
+            </div>
+            <div class="experience-details">
+              <ul>
+                <li>
+                  Developed websites and small business systems for local and
+                  international clients
+                </li>
+                <li>
+                  Assisted with Arduino, ESP8266, and Raspberry Pi projects
+                </li>
+                <li>Built IoT prototypes and smart device integrations</li>
+              </ul>
+              <div class="experience-tags">
+                <span>Arduino</span><span>ESP8266</span><span>Raspberry Pi</span
+                ><span>IoT</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section projects-section" id="projects">
+        <div class="section-kicker reveal">Projects</div>
+        <h2 class="section-title reveal">Real-world systems I have built.</h2>
+
+        <div class="project-list">
+          <article class="project-card reveal">
+            <div class="project-visual visual-one">
+              <span>01</span>
+            </div>
+            <div class="project-info">
+              <p>Dashboard</p>
+              <h3>Production Monitoring Dashboard</h3>
+              <p class="project-desc">
+                Real-time manufacturing dashboards using Grafana, PostgreSQL,
+                and Node-RED for KPI and production monitoring.
+              </p>
+              <ul>
+                <li>Grafana</li>
+                <li>PostgreSQL</li>
+                <li>Node-RED</li>
+                <li>KPI Analytics</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="project-visual visual-two">
+              <span>02</span>
+            </div>
+            <div class="project-info">
+              <p>Dashboard</p>
+              <h3>Customized ReactJS Dashboard System</h3>
+              <p class="project-desc">
+                Custom dashboards and analytics systems using ReactJS and
+                ExpressJS for live production monitoring.
+              </p>
+              <ul>
+                <li>ReactJS</li>
+                <li>ExpressJS</li>
+                <li>Real-time Data</li>
+                <li>Production Analytics</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="project-visual visual-three">
+              <span>03</span>
+            </div>
+            <div class="project-info">
+              <p>Paperless System</p>
+              <h3>iReporter (Rakupad) Paperless System</h3>
+              <p class="project-desc">
+                Implemented and customized paperless production workflows using
+                iReporter from BENG Japan.
+              </p>
+              <ul>
+                <li>iReporter</li>
+                <li>Workflow Automation</li>
+                <li>Paperless Reporting</li>
+                <li>BENG Japan</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="project-visual visual-one">
+              <span>04</span>
+            </div>
+            <div class="project-info">
+              <p>HR System</p>
+              <h3>HR & Smart Payroll System</h3>
+              <p class="project-desc">
+                HR and payroll management system with attendance tracking and
+                payroll computation.
+              </p>
+              <ul>
+                <li>PHP/Laravel</li>
+                <li>MySQL</li>
+                <li>Attendance Tracking</li>
+                <li>Payroll Computation</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="project-visual visual-two">
+              <span>05</span>
+            </div>
+            <div class="project-info">
+              <p>Management System</p>
+              <h3>AngularJS DPR Management System</h3>
+              <p class="project-desc">
+                Role-based production reporting system integrated with SQL
+                Server and Node-RED APIs.
+              </p>
+              <ul>
+                <li>AngularJS</li>
+                <li>SQL Server</li>
+                <li>Node-RED</li>
+                <li>Role-based Access</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="project-visual visual-three">
+              <span>06</span>
+            </div>
+            <div class="project-info">
+              <p>Mobile App</p>
+              <h3>Flutter Smart Locker System</h3>
+              <p class="project-desc">
+                Flutter app with Firebase authentication and ESP32 smart locker
+                integration.
+              </p>
+              <ul>
+                <li>Flutter</li>
+                <li>Firebase</li>
+                <li>ESP32</li>
+                <li>IoT Integration</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section education-section">
+        <div class="section-kicker reveal">Education</div>
+        <h2 class="section-title reveal">Academic background.</h2>
+
+        <div class="education-card reveal">
+          <div class="education-icon">CTU</div>
+          <div>
+            <h3>Cebu Technological University – Barili Campus</h3>
+            <p class="education-degree">Bachelor of Industrial Technology</p>
+            <p class="education-year">2018 – 2022</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section references-section">
+        <div class="section-kicker reveal">References</div>
+        <h2 class="section-title reveal">Professional references.</h2>
+
+        <div class="references-grid reveal">
+          <div class="reference-card">
+            <h3>Alexis Curaraton</h3>
+            <p class="reference-role">Former Manager — NPAX</p>
+            <p class="reference-contact">0968 650 5277</p>
+          </div>
+          <div class="reference-card">
+            <h3>Jay-ann Canares</h3>
+            <p class="reference-role">Supervisor — Proweaver Inc.</p>
+            <p class="reference-contact">0926 650 6923</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section contact-section" id="contact">
+        <div class="contact-card reveal">
+          <p class="eyebrow">Contact</p>
+          <h2 class="section-title">Let's build something impactful.</h2>
+          <p>
+            Have a project in manufacturing systems, web development, or
+            cross-platform apps? Let's connect and create a refined digital
+            solution.
+          </p>
+
+          <div class="contact-actions">
+            <a
+              href="mailto:johnellempuerto.dev@gmail.com"
+              class="button button-primary"
+              >Email Me</a
+            >
+            <a
+              href="https://github.com/Johnell-Empuerto"
+              target="_blank"
+              rel="noreferrer"
+              class="button button-secondary"
+              >GitHub</a
+            >
+            <a
+              href="https://linkedin.com/in/johnell-empuerto-a894a7276"
+              target="_blank"
+              rel="noreferrer"
+              class="button button-secondary"
+              >LinkedIn</a
+            >
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        © <span id="year"></span> Johnell Empuerto. Software Engineer & Full
+        Stack Developer.
+      </p>
+      <a href="#top">Back to top ↑</a>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <script src="./main.js?v=20260614-profile-static"></script>
+  </body>
+</html>
