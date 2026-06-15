@@ -5,7 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="My modern software engineer portfolio with Three.js and GSAP animations."
+      content="Johnell Empuerto is a Software Engineer based in Cebu City, Philippines, building practical manufacturing systems, production dashboards, HR/payroll platforms, paperless workflows, and cross-platform apps for real business operations."
+    />
+    <meta
+      name="keywords"
+      content="Johnell Empuerto, software engineer Cebu City, manufacturing systems, production dashboards, HR payroll systems, paperless workflow, ReactJS, AngularJS, Flutter, ExpressJS, Node-RED, Grafana, PostgreSQL"
+    />
+    <link rel="canonical" href="https://johnell-empuerto.github.io/Porfolio/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Johnell Empuerto | Software Engineer" />
+    <meta
+      property="og:description"
+      content="Software Engineer in Cebu City building dashboards, HR/payroll platforms, paperless workflows, and cross-platform apps that improve reporting, visibility, and daily operations."
+    />
+    <meta
+      property="og:url"
+      content="https://johnell-empuerto.github.io/Porfolio/"
+    />
+    <meta
+      property="og:image"
+      content="https://johnell-empuerto.github.io/Porfolio/images/img3.png"
+    />
+    <meta
+      property="og:image:alt"
+      content="Johnell Empuerto software engineer portfolio preview"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Johnell Empuerto | Software Engineer" />
+    <meta
+      name="twitter:description"
+      content="Manufacturing systems, dashboards, paperless workflows, HR/payroll platforms, and apps built for reporting, visibility, and daily operations."
+    />
+    <meta
+      name="twitter:image"
+      content="https://johnell-empuerto.github.io/Porfolio/images/img3.png"
     />
     <title>Johnell Empuerto | Software Engineer</title>
 
@@ -16,7 +49,40 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="./styles.min.css?v=20260615-stack-redesign" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Johnell Empuerto",
+        "jobTitle": "Software Engineer",
+        "email": "mailto:johnellempuerto.dev@gmail.com",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Cebu City",
+          "addressCountry": "PH"
+        },
+        "url": "https://johnell-empuerto.github.io/Porfolio/",
+        "sameAs": [
+          "https://github.com/Johnell-Empuerto",
+          "https://linkedin.com/in/johnell-empuerto-a894a7276"
+        ],
+        "knowsAbout": [
+          "Manufacturing systems",
+          "Production dashboards",
+          "HR payroll platforms",
+          "Paperless workflows",
+          "ReactJS",
+          "AngularJS",
+          "Flutter",
+          "ExpressJS",
+          "Node-RED",
+          "Grafana",
+          "PostgreSQL"
+        ]
+      }
+    </script>
+
+    <link rel="stylesheet" href="./styles.min.css?v=20260615-premium-work" />
   </head>
 
   <body>
@@ -42,36 +108,36 @@
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
-        <a href="#about">About</a>
-        <a href="#story">Profile</a>
-        <a href="#skills">Stack</a>
+        <a href="#projects">Work</a>
         <a href="#experience">Experience</a>
-        <a href="#projects">Projects</a>
-        <a href="#achievements">Achievements</a>
-        <a href="#education">Education</a>
+        <a href="#skills">Stack</a>
+        <a href="#about">About</a>
         <a href="#contact">Contact</a>
       </nav>
 
       <a class="header-cta" href="#contact">Let’s Talk</a>
 
-      <button class="hamburger" aria-label="Toggle menu">
+      <button
+        class="hamburger"
+        type="button"
+        aria-label="Open menu"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+      >
         <span></span>
         <span></span>
         <span></span>
       </button>
     </header>
 
-    <div class="mobile-menu" aria-hidden="true">
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
       <div class="mobile-menu-glow"></div>
       <div class="mobile-menu-brand">JE</div>
       <nav class="mobile-nav">
-        <a href="#about">About</a>
-        <a href="#story">Profile</a>
-        <a href="#skills">Stack</a>
+        <a href="#projects">Work</a>
         <a href="#experience">Experience</a>
-        <a href="#projects">Projects</a>
-        <a href="#achievements">Achievements</a>
-        <a href="#education">Education</a>
+        <a href="#skills">Stack</a>
+        <a href="#about">About</a>
         <a href="#contact">Contact</a>
       </nav>
       <div class="mobile-menu-footer">
@@ -90,8 +156,9 @@
           </p>
           <h1 class="hero-title split-text">Johnell Empuerto</h1>
           <p class="hero-subtitle reveal">
-            Software Engineer · Full Stack Developer · Manufacturing Systems
-            Developer
+            Software Engineer building manufacturing systems, production
+            dashboards, paperless workflows, HR/payroll platforms, and IoT apps
+            that help teams see work clearly and move faster.
           </p>
           <p
             class="hero-subtitle reveal"
@@ -121,15 +188,15 @@
           <div class="hero-metrics reveal" aria-label="Portfolio highlights">
             <div>
               <strong class="count" data-count="3">0</strong><span>+</span>
-              <p>Years building</p>
+              <p>Years shipping systems</p>
             </div>
             <div>
               <strong class="count" data-count="20">0</strong><span>+</span>
-              <p>Projects shipped</p>
+              <p>Business tools shipped</p>
             </div>
             <div>
               <strong class="count" data-count="6">0</strong><span>+</span>
-              <p>Clients served</p>
+              <p>Client teams supported</p>
             </div>
           </div>
         </div>
@@ -192,26 +259,378 @@
         </div>
       </section>
 
+      <section
+        class="section projects-section"
+        id="projects"
+        data-projects-section
+      >
+        <div class="section-kicker projects-kicker reveal">Featured Work</div>
+        <h2 class="section-title projects-title reveal">
+          Systems built for real production work.
+        </h2>
+
+        <div class="project-list">
+          <article class="project-card reveal">
+            <figure
+              class="project-visual visual-three"
+              aria-label="Interface preview for NXPERT Paperless System"
+            >
+              <span class="project-number">01</span>
+              <div class="project-screenshot form-shot">
+                <div class="screen-bar">
+                  <span></span><span></span><span></span>
+                  <strong>NXPERT FORM</strong>
+                </div>
+                <div class="screen-body paper-form">
+                  <div class="form-line wide"></div>
+                  <div class="form-grid">
+                    <span></span><span></span><span></span><span></span>
+                  </div>
+                  <div class="signature-row"><i></i><i></i><i></i></div>
+                </div>
+              </div>
+            </figure>
+            <div class="project-info">
+              <p class="project-eyebrow">Paperless System</p>
+              <h3>NXPERT Paperless System</h3>
+              <p class="project-desc">
+                Built a PDF-based digital form system for paperless production
+                reporting. Operators can input production data directly on
+                tablet-aligned forms, reducing manual paper workflows and
+                improving report consistency.
+              </p>
+              <div class="case-study-grid">
+                <div>
+                  <span>Problem</span>
+                  <p>
+                    Manual paper reports slowed encoding, checking, and
+                    production traceability.
+                  </p>
+                </div>
+                <div>
+                  <span>Solution</span>
+                  <p>
+                    Tablet-ready forms, PDF layouts, workflow rules, and digital
+                    report capture.
+                  </p>
+                </div>
+                <div>
+                  <span>Stack</span>
+                  <p>
+                    iReporter/Rakupad, Node-RED, SQL, PDF workflows,
+                    manufacturing forms.
+                  </p>
+                </div>
+                <div>
+                  <span>Result</span>
+                  <p>
+                    Cleaner reporting, less rework, and faster supervisor
+                    review.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <figure
+              class="project-visual visual-one"
+              aria-label="Interface preview for Production Monitoring Dashboard"
+            >
+              <span class="project-number">02</span>
+              <div class="project-screenshot dashboard-shot">
+                <div class="screen-bar">
+                  <span></span><span></span><span></span>
+                  <strong>LIVE KPI</strong>
+                </div>
+                <div class="screen-body">
+                  <div class="stat-row"><i>OEE</i><i>UPH</i><i>NG</i></div>
+                  <div class="chart-line"></div>
+                  <div class="data-rows">
+                    <span></span><span></span><span></span><span></span>
+                  </div>
+                </div>
+              </div>
+            </figure>
+            <div class="project-info">
+              <p class="project-eyebrow">Dashboard</p>
+              <h3>Production Monitoring Dashboard</h3>
+              <p class="project-desc">
+                Built real-time production dashboards used by operators and
+                supervisors to monitor output, defects, downtime, and daily
+                performance across production lines.
+              </p>
+              <div class="case-study-grid">
+                <div>
+                  <span>Problem</span>
+                  <p>
+                    Supervisors needed faster visibility than manual status
+                    reports could provide.
+                  </p>
+                </div>
+                <div>
+                  <span>Solution</span>
+                  <p>
+                    Live Grafana dashboards connected to production data, SQL
+                    sources, and API flows.
+                  </p>
+                </div>
+                <div>
+                  <span>Stack</span>
+                  <p>Grafana, PostgreSQL, MySQL, Oracle, Node-RED.</p>
+                </div>
+                <div>
+                  <span>Result</span>
+                  <p>
+                    Quicker reporting, better issue response, and clearer daily
+                    performance visibility.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <figure
+              class="project-visual visual-two"
+              aria-label="Interface preview for Customized ReactJS Dashboard System"
+            >
+              <span class="project-number">03</span>
+              <div class="project-screenshot app-shot">
+                <div class="app-sidebar">
+                  <span></span><span></span><span></span><span></span>
+                </div>
+                <div class="app-panel">
+                  <div class="app-header"></div>
+                  <div class="widget-grid"><i></i><i></i><i></i><i></i></div>
+                  <div class="mini-chart"></div>
+                </div>
+              </div>
+            </figure>
+            <div class="project-info">
+              <p class="project-eyebrow">Custom Analytics</p>
+              <h3>Customized ReactJS Dashboard System</h3>
+              <p class="project-desc">
+                Designed custom React dashboard workflows that turn production
+                data into role-based views for faster analysis, comparison, and
+                supervisor decision-making.
+              </p>
+              <div class="case-study-grid">
+                <div>
+                  <span>Problem</span>
+                  <p>
+                    Teams relied on static reports that were hard to filter and
+                    compare.
+                  </p>
+                </div>
+                <div>
+                  <span>Solution</span>
+                  <p>
+                    Responsive React dashboards with API-driven metrics,
+                    reusable views, and clearer filters.
+                  </p>
+                </div>
+                <div>
+                  <span>Stack</span>
+                  <p>ReactJS, ExpressJS, REST APIs, PostgreSQL, JavaScript.</p>
+                </div>
+                <div>
+                  <span>Result</span>
+                  <p>
+                    Better data scanning, faster decisions, and improved
+                    supervisor visibility.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <figure
+              class="project-visual visual-one"
+              aria-label="Interface preview for HR and Smart Payroll System"
+            >
+              <span class="project-number">04</span>
+              <div class="project-screenshot payroll-shot">
+                <div class="screen-bar">
+                  <span></span><span></span><span></span>
+                  <strong>PAYROLL</strong>
+                </div>
+                <div class="screen-body">
+                  <div class="payroll-summary"></div>
+                  <div class="data-rows payroll-rows">
+                    <span></span><span></span><span></span><span></span>
+                  </div>
+                </div>
+              </div>
+            </figure>
+            <div class="project-info">
+              <p class="project-eyebrow">HR System</p>
+              <h3>HR & Smart Payroll System</h3>
+              <p class="project-desc">
+                Designed HR/payroll workflows covering attendance, shifts,
+                leave, overtime, approvals, payroll rules, employee records, and
+                self-service requests.
+              </p>
+              <div class="case-study-grid">
+                <div>
+                  <span>Problem</span>
+                  <p>
+                    Attendance and payroll data required repetitive manual
+                    checking.
+                  </p>
+                </div>
+                <div>
+                  <span>Solution</span>
+                  <p>
+                    Centralized HRIS workflows for timekeeping, approvals,
+                    employee data, and payroll runs.
+                  </p>
+                </div>
+                <div>
+                  <span>Stack</span>
+                  <p>PHP, Laravel, MySQL, JavaScript, Bootstrap.</p>
+                </div>
+                <div>
+                  <span>Result</span>
+                  <p>
+                    Faster payroll preparation, cleaner records, and fewer
+                    manual encoding steps.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <figure
+              class="project-visual visual-two"
+              aria-label="Interface preview for AngularJS DPR Management System"
+            >
+              <span class="project-number">05</span>
+              <div class="project-screenshot dpr-shot">
+                <div class="screen-bar">
+                  <span></span><span></span><span></span>
+                  <strong>DPR FLOW</strong>
+                </div>
+                <div class="screen-body">
+                  <div class="flow-columns"><i></i><i></i><i></i></div>
+                  <div class="approval-strip"></div>
+                </div>
+              </div>
+            </figure>
+            <div class="project-info">
+              <p class="project-eyebrow">Production Reporting</p>
+              <h3>AngularJS DPR Management System</h3>
+              <p class="project-desc">
+                Developed a role-based daily production reporting system that
+                helps supervisors track report status, approvals, production
+                output, and accountability.
+              </p>
+              <div class="case-study-grid">
+                <div>
+                  <span>Problem</span>
+                  <p>
+                    DPR tracking was difficult across roles, approvals, and
+                    report status.
+                  </p>
+                </div>
+                <div>
+                  <span>Solution</span>
+                  <p>
+                    Role-based reporting screens with API-backed status,
+                    approval, and production visibility.
+                  </p>
+                </div>
+                <div>
+                  <span>Stack</span>
+                  <p>AngularJS, SQL Server, Node-RED, REST APIs.</p>
+                </div>
+                <div>
+                  <span>Result</span>
+                  <p>
+                    Improved tracking, clearer ownership, and better supervisor
+                    control.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <figure
+              class="project-visual visual-three"
+              aria-label="Interface preview for Flutter Smart Locker System"
+            >
+              <span class="project-number">06</span>
+              <div class="project-screenshot mobile-shot">
+                <div class="phone-shell">
+                  <div class="phone-status"></div>
+                  <div class="locker-grid">
+                    <i></i><i></i><i></i><i></i><i></i><i></i>
+                  </div>
+                  <div class="unlock-button"></div>
+                </div>
+              </div>
+            </figure>
+            <div class="project-info">
+              <p class="project-eyebrow">Mobile IoT</p>
+              <h3>Flutter Smart Locker System</h3>
+              <p class="project-desc">
+                Created a Flutter mobile app with Firebase authentication and
+                ESP32 integration so locker access can be controlled, tracked,
+                and checked in real time.
+              </p>
+              <div class="case-study-grid">
+                <div>
+                  <span>Problem</span>
+                  <p>
+                    Manual locker control made access tracking slow and
+                    unreliable.
+                  </p>
+                </div>
+                <div>
+                  <span>Solution</span>
+                  <p>
+                    Mobile authentication, device commands, and IoT-driven
+                    locker states.
+                  </p>
+                </div>
+                <div>
+                  <span>Stack</span>
+                  <p>Flutter, Firebase, ESP32, IoT integration.</p>
+                </div>
+                <div>
+                  <span>Result</span>
+                  <p>
+                    Cleaner access logs, easier control, and real-time locker
+                    visibility.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
       <section class="section split-section" id="about">
         <div class="section-kicker reveal">About</div>
         <div class="split-content">
           <div>
             <h2 class="section-title reveal">
-              Building systems that power manufacturing.
+              Building systems that make operations easier to run.
             </h2>
             <p class="section-copy reveal">
-              Software Engineer with experience in manufacturing systems,
-              production monitoring dashboards, HR/payroll systems, web
-              development, and cross-platform applications. Skilled in ReactJS,
-              AngularJS, Flutter, Node-RED, ExpressJS, Grafana, SQL Server,
-              PostgreSQL, MySQL, and REST API integration.
+              Software Engineer focused on turning manual production, HR,
+              reporting, and tracking workflows into digital systems that teams
+              can use every day. I build dashboards, forms, APIs, and apps that
+              reduce repeated encoding and give supervisors better visibility.
             </p>
             <p class="section-copy reveal">
-              Experienced in building real-time production systems used by
-              operators and supervisors in automotive and electronics
-              industries. Strong background in paperless production systems,
-              dashboard analytics, workflow automation, and manufacturing
-              reporting solutions using iReporter (Rakupad) from BENG Japan.
+              My work is strongest where software meets real operations:
+              production lines, paperless reporting, HR/payroll rules, dashboard
+              analytics, workflow automation, and IoT-backed tools used by
+              operators, supervisors, and business teams.
             </p>
           </div>
 
@@ -221,8 +640,8 @@
               <div>
                 <h3>Manufacturing Systems</h3>
                 <p>
-                  Real-time production dashboards, paperless reporting, KPI
-                  monitoring for automotive & electronics.
+                  Production dashboards and paperless reports that help teams
+                  monitor output, defects, daily targets, and supervisor checks.
                 </p>
               </div>
             </div>
@@ -231,8 +650,8 @@
               <div>
                 <h3>Full Stack Web</h3>
                 <p>
-                  ReactJS, AngularJS, ExpressJS, PHP with PostgreSQL, MySQL,
-                  Oracle, SQL Server.
+                  Web platforms with APIs, role-based screens, and databases
+                  built for reporting, approvals, and business workflows.
                 </p>
               </div>
             </div>
@@ -241,8 +660,8 @@
               <div>
                 <h3>Cross-Platform Apps</h3>
                 <p>
-                  Flutter mobile apps with Firebase, ESP32 IoT integration, and
-                  smart system solutions.
+                  Flutter and IoT solutions that connect mobile users to device
+                  states, access control, and operational records.
                 </p>
               </div>
             </div>
@@ -260,22 +679,20 @@
           <div class="story-body" aria-label="Johnell Empuerto profile">
             <p class="story-line reveal">
               I'm Johnell Empuerto, a Software Engineer based in Cebu City,
-              Philippines. I build manufacturing systems, production dashboards,
-              HR/payroll platforms, paperless reporting workflows, and
-              cross-platform applications.
+              Philippines. I build practical systems for manufacturing,
+              reporting, HR/payroll, paperless workflows, and cross-platform
+              apps where reliability matters more than decoration.
             </p>
             <p class="story-line reveal">
-              My work focuses on creating practical systems used by operators,
-              supervisors, and business teams in real environments. I enjoy
-              turning manual processes into faster, cleaner, and more reliable
-              digital solutions using ReactJS, AngularJS, Flutter, ExpressJS,
-              Node-RED, Grafana, PostgreSQL, MySQL, Oracle, and REST API
-              integrations.
+              My work focuses on software that improves daily operations:
+              clearer dashboards, faster reports, less manual encoding, better
+              approval tracking, and tools that operators and supervisors can
+              actually rely on.
             </p>
             <p class="story-line reveal">
-              I'm especially interested in manufacturing technology, dashboard
-              analytics, workflow automation, IoT integration, and systems that
-              improve daily operations.
+              I like the full path from problem discovery to interface design,
+              API integration, database logic, deployment, support, and
+              optimization after real users start depending on the system.
             </p>
           </div>
 
@@ -309,8 +726,8 @@
           Core skills & technologies.
         </h2>
         <p class="skills-intro reveal">
-          Systems, interfaces, data, automation, and AI tools arranged by how I
-          use them in production work.
+          Tools I use to design, code, connect, monitor, and improve systems
+          that support real business operations.
         </p>
 
         <div class="skills-grid">
@@ -319,7 +736,7 @@
             <h3>Frontend</h3>
             <p>
               ReactJS, AngularJS, Flutter, HTML5, CSS3, JavaScript, Bootstrap,
-              Tailwind CSS
+              and Tailwind CSS for usable dashboards, forms, and mobile flows.
             </p>
           </article>
           <article class="skill-card reveal">
@@ -327,7 +744,8 @@
             <h3>Backend & Databases</h3>
             <p>
               Node-RED, ExpressJS, PHP, Laravel, Firebase, SQL Server,
-              PostgreSQL, MySQL, Oracle
+              PostgreSQL, MySQL, and Oracle for APIs, reporting, and workflow
+              logic.
             </p>
           </article>
           <article class="skill-card reveal">
@@ -335,7 +753,8 @@
             <h3>Industrial Systems</h3>
             <p>
               Grafana, iReporter (Rakupad), KPI Dashboards, Production
-              Monitoring, QR Systems, Paperless Reporting
+              Monitoring, QR Systems, and Paperless Reporting for production
+              visibility.
             </p>
           </article>
           <article class="skill-card reveal">
@@ -376,7 +795,8 @@
           </div>
           <p class="experience-intro reveal">
             From freelance prototypes to production-grade manufacturing systems,
-            each role sharpened how I design reliable tools for real users.
+            each role sharpened how I design tools that people can trust during
+            daily operations.
           </p>
         </div>
 
@@ -446,24 +866,27 @@
               </div>
               <div class="experience-details">
                 <p class="experience-focus">
-                  Manufacturing systems and dashboards
+                  Manufacturing systems, dashboards, and paperless workflows
                 </p>
                 <ul>
                   <li>
                     Developed web, desktop, and mobile production systems used
-                    daily by operators and supervisors
+                    by operators and supervisors to encode, review, and monitor
+                    daily production data
                   </li>
                   <li>
                     Built real-time dashboards using Grafana, PostgreSQL, MySQL,
-                    and Oracle
+                    and Oracle to track output, defects, performance, and
+                    operational status
                   </li>
                   <li>
                     Implemented paperless production solutions using iReporter
-                    and custom reporting workflows
+                    and custom workflows to reduce manual forms and improve
+                    report consistency
                   </li>
                   <li>
-                    Built REST API integrations for manufacturing systems and
-                    reporting platforms
+                    Built REST API integrations that connect shop-floor data,
+                    reporting platforms, and supervisor dashboards
                   </li>
                 </ul>
                 <div class="experience-tags">
@@ -492,21 +915,26 @@
               </div>
               <div class="experience-details">
                 <p class="experience-focus">
-                  Tourism website and custom modules
+                  Tourism website, custom modules, and mobile responsiveness
                 </p>
                 <ul>
                   <li>
-                    Developed responsive tourism website using HTML, CSS, PHP,
-                    and Bootstrap
+                    Developed a responsive tourism website using HTML, CSS, PHP,
+                    and Bootstrap so packages, details, and inquiries were
+                    easier to browse on mobile
                   </li>
                   <li>
                     Built custom modules for tour listings, contact forms, and
-                    location services
+                    location services to reduce manual page updates
                   </li>
                   <li>
-                    Improved mobile responsiveness and website performance
+                    Improved mobile responsiveness and page performance for
+                    smoother browsing
                   </li>
-                  <li>Managed updates for promotions and tourism packages</li>
+                  <li>
+                    Managed promotion and package updates to keep content
+                    current
+                  </li>
                 </ul>
                 <div class="experience-tags">
                   <span>HTML</span><span>CSS</span><span>PHP</span
@@ -529,19 +957,24 @@
               </div>
               <div class="experience-details">
                 <p class="experience-focus">
-                  WordPress builds for international clients
+                  WordPress delivery for international client websites
                 </p>
                 <ul>
-                  <li>Developed custom WordPress themes and plugins</li>
                   <li>
-                    Customized websites using PHP, HTML, CSS, and JavaScript
+                    Developed custom WordPress themes and plugins aligned with
+                    client requirements
                   </li>
                   <li>
-                    Built responsive and SEO-friendly websites for international
-                    clients
+                    Customized PHP, HTML, CSS, and JavaScript to improve layout,
+                    interactions, and maintainability
                   </li>
                   <li>
-                    Improved website speed, performance, and user experience
+                    Built responsive, SEO-friendly websites for international
+                    clients with cleaner content structure
+                  </li>
+                  <li>
+                    Improved speed, performance, and user experience across
+                    production websites
                   </li>
                 </ul>
                 <div class="experience-tags">
@@ -569,13 +1002,18 @@
                 </p>
                 <ul>
                   <li>
-                    Developed websites and small business systems for local and
-                    international clients
+                    Developed websites and small business systems that helped
+                    clients present services, collect inquiries, and manage
+                    basic workflows
                   </li>
                   <li>
                     Assisted with Arduino, ESP8266, and Raspberry Pi projects
+                    for device control and sensor-based prototypes
                   </li>
-                  <li>Built IoT prototypes and smart device integrations</li>
+                  <li>
+                    Built IoT prototypes and smart device integrations for early
+                    product validation
+                  </li>
                 </ul>
                 <div class="experience-tags">
                   <span>Arduino</span><span>ESP8266</span
@@ -585,139 +1023,6 @@
               <span class="experience-index" aria-hidden="true">04</span>
             </article>
           </div>
-        </div>
-      </section>
-
-      <section
-        class="section projects-section"
-        id="projects"
-        data-projects-section
-      >
-        <div class="section-kicker projects-kicker reveal">Projects</div>
-        <h2 class="section-title projects-title reveal">
-          Real-world systems I have built.
-        </h2>
-
-        <div class="project-list">
-          <article class="project-card reveal">
-            <div class="project-visual visual-one">
-              <span>01</span>
-            </div>
-            <div class="project-info">
-              <p>Dashboard</p>
-              <h3>Production Monitoring Dashboard</h3>
-              <p class="project-desc">
-                Real-time manufacturing dashboards using Grafana, PostgreSQL,
-                and Node-RED for KPI and production monitoring.
-              </p>
-              <ul>
-                <li>Grafana</li>
-                <li>PostgreSQL</li>
-                <li>Node-RED</li>
-                <li>KPI Analytics</li>
-              </ul>
-            </div>
-          </article>
-
-          <article class="project-card reveal">
-            <div class="project-visual visual-two">
-              <span>02</span>
-            </div>
-            <div class="project-info">
-              <p>Dashboard</p>
-              <h3>Customized ReactJS Dashboard System</h3>
-              <p class="project-desc">
-                Custom dashboards and analytics systems using ReactJS and
-                ExpressJS for live production monitoring.
-              </p>
-              <ul>
-                <li>ReactJS</li>
-                <li>ExpressJS</li>
-                <li>Real-time Data</li>
-                <li>Production Analytics</li>
-              </ul>
-            </div>
-          </article>
-
-          <article class="project-card reveal">
-            <div class="project-visual visual-three">
-              <span>03</span>
-            </div>
-            <div class="project-info">
-              <p>Paperless System</p>
-              <h3>iReporter (Rakupad) Paperless System</h3>
-              <p class="project-desc">
-                Implemented and customized paperless production workflows using
-                iReporter from BENG Japan.
-              </p>
-              <ul>
-                <li>iReporter</li>
-                <li>Workflow Automation</li>
-                <li>Paperless Reporting</li>
-                <li>BENG Japan</li>
-              </ul>
-            </div>
-          </article>
-
-          <article class="project-card reveal">
-            <div class="project-visual visual-one">
-              <span>04</span>
-            </div>
-            <div class="project-info">
-              <p>HR System</p>
-              <h3>HR & Smart Payroll System</h3>
-              <p class="project-desc">
-                HR and payroll management system with attendance tracking and
-                payroll computation.
-              </p>
-              <ul>
-                <li>PHP/Laravel</li>
-                <li>MySQL</li>
-                <li>Attendance Tracking</li>
-                <li>Payroll Computation</li>
-              </ul>
-            </div>
-          </article>
-
-          <article class="project-card reveal">
-            <div class="project-visual visual-two">
-              <span>05</span>
-            </div>
-            <div class="project-info">
-              <p>Management System</p>
-              <h3>AngularJS DPR Management System</h3>
-              <p class="project-desc">
-                Role-based production reporting system integrated with SQL
-                Server and Node-RED APIs.
-              </p>
-              <ul>
-                <li>AngularJS</li>
-                <li>SQL Server</li>
-                <li>Node-RED</li>
-                <li>Role-based Access</li>
-              </ul>
-            </div>
-          </article>
-
-          <article class="project-card reveal">
-            <div class="project-visual visual-three">
-              <span>06</span>
-            </div>
-            <div class="project-info">
-              <p>Mobile App</p>
-              <h3>Flutter Smart Locker System</h3>
-              <p class="project-desc">
-                Flutter app with Firebase authentication and ESP32 smart locker
-                integration.
-              </p>
-              <ul>
-                <li>Flutter</li>
-                <li>Firebase</li>
-                <li>ESP32</li>
-                <li>IoT Integration</li>
-              </ul>
-            </div>
-          </article>
         </div>
       </section>
 
@@ -736,8 +1041,8 @@
             </h2>
           </div>
           <p class="achievements-intro reveal">
-            Milestones from shipping production systems, supporting real
-            clients, and helping other developers grow inside the team.
+            Milestones from shipping systems that support real client
+            operations, improving delivery habits, and helping teammates grow.
           </p>
         </div>
 
@@ -783,8 +1088,9 @@
                 <p class="achievement-year">2025 / NPAX</p>
                 <h3>Rookie of the Year</h3>
                 <p>
-                  Recognized after deploying and maintaining multiple production
-                  systems with consistent support for manufacturing clients.
+                  Recognized after deploying and maintaining production systems
+                  that supported daily reporting, monitoring, and manufacturing
+                  client operations.
                 </p>
                 <div class="achievement-clients" aria-label="Supported clients">
                   <span>Isuzu</span><span>Honda</span><span>Taiyo Yuden</span
@@ -811,9 +1117,9 @@
                 <p class="achievement-year">Proweaver / Team Growth</p>
                 <h3>Senior Developer Mentor</h3>
                 <p>
-                  Grew into a senior developer within the team, guiding
+                  Grew into a senior developer within the team by guiding
                   probationary developers and trainees through standards,
-                  debugging, and delivery habits.
+                  debugging, delivery habits, and practical problem solving.
                 </p>
                 <div class="achievement-clients" aria-label="Mentoring focus">
                   <span>Code Reviews</span><span>Training</span
@@ -957,12 +1263,12 @@
         <div class="references-grid reveal">
           <div class="reference-card">
             <h3>Alexis Curaraton</h3>
-            <p class="reference-role">Former Manager — NPAX</p>
+            <p class="reference-role">Manager &mdash; NPAX</p>
             <p class="reference-contact">0968 650 5277</p>
           </div>
           <div class="reference-card">
             <h3>Jay-ann Canares</h3>
-            <p class="reference-role">Supervisor — Proweaver Inc.</p>
+            <p class="reference-role">Supervisor &mdash; Proweaver Inc.</p>
             <p class="reference-contact">0926 650 6923</p>
           </div>
         </div>
@@ -973,9 +1279,9 @@
           <p class="eyebrow">Contact</p>
           <h2 class="section-title">Let's build something impactful.</h2>
           <p>
-            Have a project in manufacturing systems, web development, or
-            cross-platform apps? Let's connect and create a refined digital
-            solution.
+            Need a dashboard, internal system, paperless workflow, HR/payroll
+            platform, or cross-platform app? Let's design, code, optimize, and
+            ship something your team can use with confidence.
           </p>
 
           <div class="contact-actions">
@@ -1015,6 +1321,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
     <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-    <script src="./main.min.js?v=20260615-stack-redesign"></script>
+    <script src="./main.min.js?v=20260615-premium-work"></script>
   </body>
 </html>

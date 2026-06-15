@@ -35,6 +35,30 @@ function splitTitle() {
 
 splitTitle();
 
+function setupSectionOrder() {
+  const main = document.querySelector("main");
+  if (!main) return;
+
+  [
+    document.querySelector("#hero"),
+    document.querySelector(".marquee-section"),
+    document.querySelector("#projects"),
+    document.querySelector("#experience"),
+    document.querySelector("#skills"),
+    document.querySelector(".skills-section"),
+    document.querySelector("#about"),
+    document.querySelector("#story"),
+    document.querySelector("#achievements"),
+    document.querySelector("#education"),
+    document.querySelector(".references-section"),
+    document.querySelector("#contact"),
+  ]
+    .filter(Boolean)
+    .forEach((section) => main.appendChild(section));
+}
+
+setupSectionOrder();
+
 function setupCursor() {
   if (reducedMotion() || window.matchMedia("(pointer: coarse)").matches) return;
 
@@ -70,6 +94,8 @@ function setupDeveloperScene() {
   if (!window.THREE || !canvas || reducedMotion()) return;
 
   const card = document.querySelector(".orb-card");
+  const hero = document.querySelector("#hero");
+  const mobileScene = window.matchMedia("(max-width: 640px), (pointer: coarse)").matches;
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
   camera.position.z = 5.2;
@@ -77,15 +103,16 @@ function setupDeveloperScene() {
   const renderer = new THREE.WebGLRenderer({
     canvas,
     alpha: true,
-    antialias: true,
-    powerPreference: "high-performance",
+    antialias: !mobileScene,
+    powerPreference: mobileScene ? "low-power" : "high-performance",
   });
 
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  const pixelRatioLimit = mobileScene ? 1.25 : 1.8;
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, pixelRatioLimit));
 
   const group = new THREE.Group();
   const constellation = new THREE.Group();
-  const nodeCount = window.innerWidth > 640 ? 76 : 48;
+  const nodeCount = mobileScene ? 34 : window.innerWidth > 1180 ? 64 : 50;
   const nodes = [];
   const positions = new Float32Array(nodeCount * 3);
   const colors = new Float32Array(nodeCount * 3);
@@ -133,7 +160,7 @@ function setupDeveloperScene() {
       const dz = nodes[i].z - nodes[j].z;
       const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-      if (distance < 1.25) {
+      if (distance < (mobileScene ? 1.05 : 1.25)) {
         links.push(nodes[i].x, nodes[i].y, nodes[i].z, nodes[j].x, nodes[j].y, nodes[j].z);
       }
     }
@@ -185,37 +212,84 @@ function setupDeveloperScene() {
   let targetX = 0;
   let targetY = 0;
 
-  card?.addEventListener("mousemove", (event) => {
+  const handlePointerMove = (event) => {
+    if (mobileScene) return;
+
     const rect = card.getBoundingClientRect();
     targetX = ((event.clientX - rect.left) / rect.width - 0.5) * 0.9;
     targetY = ((event.clientY - rect.top) / rect.height - 0.5) * 0.9;
-  });
+  };
 
-  card?.addEventListener("mouseleave", () => {
+  const handlePointerLeave = () => {
     targetX = 0;
     targetY = 0;
-  });
+  };
+
+  card?.addEventListener("mousemove", handlePointerMove);
+  card?.addEventListener("mouseleave", handlePointerLeave);
 
   const clock = new THREE.Clock();
+  const frameDelay = mobileScene ? 1000 / 18 : 1000 / 60;
+  const rotationScale = mobileScene ? 0.58 : 1;
+  let animationFrame = 0;
+  let lastFrameTime = 0;
+  let sceneVisible = false;
+  let destroyed = false;
+  let observer;
 
-  function animate() {
+  function renderFrame(timestamp = 0) {
+    if (destroyed || !sceneVisible || document.hidden) {
+      animationFrame = 0;
+      return;
+    }
+
+    const shouldRender = !lastFrameTime || timestamp - lastFrameTime >= frameDelay;
+
+    if (!shouldRender) {
+      animationFrame = requestAnimationFrame(renderFrame);
+      return;
+    }
+
+    lastFrameTime = timestamp;
     const elapsed = clock.getElapsedTime();
 
-    constellation.rotation.y = elapsed * 0.22;
-    constellation.rotation.x = Math.sin(elapsed * 0.35) * 0.18;
-    cube.rotation.x = elapsed * 0.42;
-    cube.rotation.y = elapsed * 0.32;
-    ringA.rotation.z = elapsed * 0.38;
-    ringB.rotation.x = Math.PI / 2.4 + elapsed * 0.28;
+    constellation.rotation.y = elapsed * 0.22 * rotationScale;
+    constellation.rotation.x = Math.sin(elapsed * 0.35 * rotationScale) * 0.18;
+    cube.rotation.x = elapsed * 0.42 * rotationScale;
+    cube.rotation.y = elapsed * 0.32 * rotationScale;
+    ringA.rotation.z = elapsed * 0.38 * rotationScale;
+    ringB.rotation.x = Math.PI / 2.4 + elapsed * 0.28 * rotationScale;
 
     group.rotation.y += (targetX - group.rotation.y) * 0.045;
     group.rotation.x += (targetY - group.rotation.x) * 0.045;
 
     renderer.render(scene, camera);
-    requestAnimationFrame(animate);
+    animationFrame = requestAnimationFrame(renderFrame);
   }
 
-  animate();
+  function startLoop() {
+    if (destroyed || animationFrame || document.hidden) return;
+
+    sceneVisible = true;
+    clock.start();
+    animationFrame = requestAnimationFrame(renderFrame);
+  }
+
+  function stopLoop() {
+    sceneVisible = false;
+    lastFrameTime = 0;
+
+    if (!animationFrame) return;
+
+    cancelAnimationFrame(animationFrame);
+    animationFrame = 0;
+  }
+
+  function isHeroVisible() {
+    const target = hero || card || canvas;
+    const rect = target.getBoundingClientRect();
+    return rect.bottom > 0 && rect.top < window.innerHeight;
+  }
 
   function handleResize() {
     const rect = card?.getBoundingClientRect() || canvas.getBoundingClientRect();
@@ -224,12 +298,86 @@ function setupDeveloperScene() {
 
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, pixelRatioLimit));
     renderer.setSize(width, height, false);
   }
 
   handleResize();
   window.addEventListener("resize", handleResize);
+
+  if ("IntersectionObserver" in window) {
+    observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && entry.intersectionRatio > 0.08) {
+          startLoop();
+          return;
+        }
+
+        stopLoop();
+      },
+      {
+        threshold: [0, 0.08, 0.2],
+        rootMargin: "80px 0px 80px 0px",
+      }
+    );
+
+    observer.observe(hero || card || canvas);
+  } else if (isHeroVisible()) {
+    startLoop();
+  }
+
+  function handleVisibilityChange() {
+    if (document.hidden) {
+      stopLoop();
+      return;
+    }
+
+    if (isHeroVisible()) {
+      startLoop();
+    }
+  }
+
+  document.addEventListener("visibilitychange", handleVisibilityChange);
+
+  function disposeMaterial(material) {
+    if (Array.isArray(material)) {
+      material.forEach(disposeMaterial);
+      return;
+    }
+
+    if (!material) return;
+
+    Object.values(material).forEach((value) => {
+      if (value && typeof value.dispose === "function") {
+        value.dispose();
+      }
+    });
+
+    material.dispose?.();
+  }
+
+  function destroyScene() {
+    if (destroyed) return;
+
+    destroyed = true;
+    stopLoop();
+    observer?.disconnect();
+    window.removeEventListener("resize", handleResize);
+    document.removeEventListener("visibilitychange", handleVisibilityChange);
+    card?.removeEventListener("mousemove", handlePointerMove);
+    card?.removeEventListener("mouseleave", handlePointerLeave);
+
+    scene.traverse((object) => {
+      object.geometry?.dispose?.();
+      disposeMaterial(object.material);
+    });
+
+    renderer.dispose();
+    renderer.forceContextLoss?.();
+  }
+
+  window.addEventListener("pagehide", destroyScene, { once: true });
+  window.addEventListener("beforeunload", destroyScene, { once: true });
 }
 
 function setupAnimations() {
@@ -1481,7 +1629,7 @@ function setupScrollTextReveal() {
 }
 
 function setupMagneticButtons() {
-  if (reducedMotion()) return;
+  if (reducedMotion() || !window.gsap || window.matchMedia("(pointer: coarse)").matches) return;
 
   document.querySelectorAll(".button, .header-cta").forEach((button) => {
     button.addEventListener("mousemove", (event) => {
@@ -1510,7 +1658,7 @@ function setupMagneticButtons() {
 
 function setupMarqueeHover() {
   const words = document.querySelectorAll(".marquee-track span");
-  if (!words.length || reducedMotion()) return;
+  if (!words.length || reducedMotion() || window.matchMedia("(pointer: coarse)").matches) return;
 
   words.forEach((word) => {
     const activate = () => {
@@ -1520,10 +1668,10 @@ function setupMarqueeHover() {
 
       gsap.killTweensOf(word);
       gsap.to(word, {
-        y: -8,
-        scale: 1.08,
+        y: -4,
+        scale: 1.035,
         color: "#ff334e",
-        textShadow: "0 0 18px rgba(255, 51, 78, 0.7), 0 0 42px rgba(255, 78, 205, 0.34)",
+        textShadow: "0 0 12px rgba(255, 51, 78, 0.42), 0 0 24px rgba(255, 78, 205, 0.22)",
         "--mark-opacity": 1,
         "--mark-scale": 1,
         duration: 0.34,
@@ -1541,7 +1689,7 @@ function setupMarqueeHover() {
       gsap.to(word, {
         y: 0,
         scale: 1,
-        color: "rgba(245, 247, 251, 0.72)",
+        color: "rgba(245, 247, 251, 0.5)",
         textShadow: "0 0 0 rgba(255, 51, 78, 0)",
         "--mark-opacity": 0,
         "--mark-scale": 0,
@@ -1562,16 +1710,18 @@ function setupFlyingAccents() {
   const stage = document.querySelector(".ambient-stage");
   if (!stage || reducedMotion()) return;
 
-  const sparkCount = window.innerWidth > 760 ? 16 : 8;
+  if (window.matchMedia("(max-width: 640px), (pointer: coarse)").matches) return;
+
+  const sparkCount = window.innerWidth > 1180 ? 8 : 5;
   const fragment = document.createDocumentFragment();
 
   for (let index = 0; index < sparkCount; index += 1) {
     const spark = document.createElement("span");
     spark.className = "flying-spark";
     spark.style.setProperty("--top", `${8 + Math.random() * 84}%`);
-    spark.style.setProperty("--size", `${70 + Math.random() * 150}px`);
-    spark.style.setProperty("--duration", `${13 + Math.random() * 13}s`);
-    spark.style.setProperty("--delay", `${Math.random() * -18}s`);
+    spark.style.setProperty("--size", `${60 + Math.random() * 90}px`);
+    spark.style.setProperty("--duration", `${18 + Math.random() * 16}s`);
+    spark.style.setProperty("--delay", `${Math.random() * -24}s`);
     fragment.appendChild(spark);
   }
 
@@ -1583,13 +1733,16 @@ function setupArtParallax() {
 
   const hasDesktopRoom = window.matchMedia("(min-width: 641px)").matches;
 
+  if (!hasDesktopRoom) return;
+
   gsap.utils.toArray("[data-depth]").forEach((layer, index) => {
     const depth = Number(layer.dataset.depth || 0);
+    const softDepth = depth * 0.48;
 
     gsap.to(layer, {
-      y: depth,
-      x: index % 2 === 0 ? depth * 0.16 : depth * -0.12,
-      rotate: index % 2 === 0 ? 7 : -7,
+      y: softDepth,
+      x: index % 2 === 0 ? softDepth * 0.1 : softDepth * -0.08,
+      rotate: index % 2 === 0 ? 3 : -3,
       ease: "none",
       scrollTrigger: {
         trigger: document.body,
@@ -1600,52 +1753,35 @@ function setupArtParallax() {
     });
   });
 
-  if (hasDesktopRoom) {
-    gsap.to(".hero-card", {
-      yPercent: -8,
-      rotate: -1.2,
-      ease: "none",
-      scrollTrigger: {
-        trigger: ".hero",
-        start: "top top",
-        end: "bottom top",
-        scrub: 1,
-      },
-    });
+  gsap.to(".hero-card", {
+    yPercent: -5,
+    rotate: -0.6,
+    ease: "none",
+    scrollTrigger: {
+      trigger: ".hero",
+      start: "top top",
+      end: "bottom top",
+      scrub: 1,
+    },
+  });
 
-    gsap.to(".hero-copy", {
-      yPercent: 5,
-      ease: "none",
-      scrollTrigger: {
-        trigger: ".hero",
-        start: "top top",
-        end: "bottom top",
-        scrub: 1,
-      },
-    });
-  }
-
-  gsap.utils.toArray(".section").forEach((section, index) => {
-    gsap.fromTo(
-      section,
-      { "--section-depth": "0px" },
-      {
-        "--section-depth": index % 2 === 0 ? "18px" : "-18px",
-        ease: "none",
-        scrollTrigger: {
-          trigger: section,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1.5,
-        },
-      }
-    );
+  gsap.to(".hero-copy", {
+    yPercent: 3,
+    ease: "none",
+    scrollTrigger: {
+      trigger: ".hero",
+      start: "top top",
+      end: "bottom top",
+      scrub: 1,
+    },
   });
 }
 
 function setupCardSpotlights() {
+  if (window.matchMedia("(pointer: coarse)").matches) return;
+
   const cards = document.querySelectorAll(
-    ".about-panel, .project-card, .achievement-card, .experience-card, .education-card, .reference-card, .contact-card, .hero-metrics div"
+    ".project-card, .experience-card, .contact-card, .hero-metrics div"
   );
   const canTilt = window.matchMedia("(pointer: fine)").matches && !reducedMotion() && window.gsap;
 
@@ -1690,16 +1826,22 @@ function setupCardSpotlights() {
 function setupMobileMenu() {
   const hamburger = document.querySelector(".hamburger");
   const menu = document.querySelector(".mobile-menu");
+  if (!hamburger || !menu) return;
+
   const links = menu.querySelectorAll(".mobile-nav a");
   let isOpen = false;
 
   function openMenu() {
     isOpen = true;
     hamburger.classList.add("is-active");
+    hamburger.setAttribute("aria-expanded", "true");
+    hamburger.setAttribute("aria-label", "Close menu");
     menu.classList.add("is-open");
+    menu.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
 
     if (!window.gsap || reducedMotion()) {
+      links[0]?.focus();
       return;
     }
 
@@ -1709,38 +1851,56 @@ function setupMobileMenu() {
       { opacity: 0, y: 24 },
       { opacity: 1, y: 0, duration: 0.5, stagger: 0.07, ease: "power3.out" }
     );
+
+    links[0]?.focus();
   }
 
-  function closeMenu() {
+  function closeMenu({ returnFocus = true } = {}) {
     isOpen = false;
     hamburger.classList.remove("is-active");
+    hamburger.setAttribute("aria-expanded", "false");
+    hamburger.setAttribute("aria-label", "Open menu");
     menu.classList.remove("is-open");
+    menu.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
 
     if (window.gsap && !reducedMotion()) {
       gsap.set(links, { opacity: 0, y: 24 });
     }
+
+    if (returnFocus) {
+      hamburger.focus();
+    }
   }
 
   hamburger.addEventListener("click", () => {
-    isOpen ? closeMenu() : openMenu();
+    isOpen ? closeMenu({ returnFocus: true }) : openMenu();
   });
 
   links.forEach((link) => {
     link.addEventListener("click", (e) => {
       e.preventDefault();
       const target = link.getAttribute("href");
-      closeMenu();
+      closeMenu({ returnFocus: true });
       if (window.gsap) {
         gsap.to(window, { duration: 0.6, scrollTo: { y: target }, ease: "power3.inOut" });
+      } else {
+        document.querySelector(target)?.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth" });
       }
     });
   });
 
   document.addEventListener("click", (e) => {
     if (isOpen && !menu.contains(e.target) && !hamburger.contains(e.target)) {
-      closeMenu();
+      closeMenu({ returnFocus: false });
     }
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (!isOpen || event.key !== "Escape") return;
+
+    event.preventDefault();
+    closeMenu({ returnFocus: true });
   });
 }
 
