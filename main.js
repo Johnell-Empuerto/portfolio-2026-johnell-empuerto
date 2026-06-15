@@ -1,5 +1,18 @@
 const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const reducedMotion = () => prefersReducedMotion;
+const isChromeTouchBrowser = () => {
+  const ua = navigator.userAgent;
+  const isChrome = /\b(?:Chrome|CriOS)\//.test(ua);
+  const isChromiumEdge = /\bEdg(?:e|A|iOS)?\//.test(ua);
+  const isOtherChromium =
+    /\b(?:OPR|Opera|SamsungBrowser|DuckDuckGo|YaBrowser)\//.test(ua);
+  const isTouchLike =
+    navigator.maxTouchPoints > 0 ||
+    window.matchMedia("(pointer: coarse)").matches ||
+    window.matchMedia("(hover: none)").matches;
+
+  return isChrome && !isChromiumEdge && !isOtherChromium && isTouchLike;
+};
 
 document.documentElement.classList.add("js");
 document.querySelector("#year").textContent = new Date().getFullYear();
@@ -229,6 +242,12 @@ function setupAnimations() {
   }
 
   gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+  if (isChromeTouchBrowser()) {
+    ScrollTrigger.config({
+      ignoreMobileResize: true,
+    });
+  }
 
   gsap.to(".scroll-progress", {
     width: "100%",
@@ -1840,6 +1859,124 @@ function setupMobileMenu() {
   });
 }
 
+function setupChromeTouchScrollSync() {
+  if (!window.ScrollTrigger || !isChromeTouchBrowser() || reducedMotion()) return;
+
+  let updateFrame = 0;
+  let refreshTimer = 0;
+
+  const updateScrollTriggers = () => {
+    if (updateFrame) return;
+
+    updateFrame = requestAnimationFrame(() => {
+      updateFrame = 0;
+      ScrollTrigger.update();
+    });
+  };
+
+  const refreshAfterTouch = () => {
+    updateScrollTriggers();
+    clearTimeout(refreshTimer);
+
+    refreshTimer = window.setTimeout(() => {
+      ScrollTrigger.refresh();
+      updateScrollTriggers();
+    }, 140);
+  };
+
+  window.addEventListener("scroll", updateScrollTriggers, { passive: true });
+  document.addEventListener("touchmove", updateScrollTriggers, { passive: true });
+  document.addEventListener("touchend", refreshAfterTouch, { passive: true });
+  document.addEventListener("touchcancel", refreshAfterTouch, { passive: true });
+  window.addEventListener("orientationchange", refreshAfterTouch, { passive: true });
+  window.visualViewport?.addEventListener("resize", refreshAfterTouch, { passive: true });
+
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(refreshAfterTouch).catch(() => {});
+  }
+
+  if (document.readyState === "complete") {
+    refreshAfterTouch();
+  } else {
+    window.addEventListener("load", refreshAfterTouch, { once: true });
+  }
+}
+
+function setupMobilePinSpacerCleanup() {
+  if (!window.ScrollTrigger || !window.gsap || reducedMotion()) return;
+
+  const mobileLayout = window.matchMedia("(max-width: 980px)");
+  let cleanupFrame = 0;
+
+  const resetMobileStack = () => {
+    const section = document.querySelector(".skills-section");
+    const cards = gsap.utils.toArray(".skills-grid .skill-card");
+
+    if (!section || !cards.length) return;
+
+    section.classList.add("is-stack-revealed");
+    section.classList.remove("is-stack-story");
+    section.style.removeProperty("--stack-gap");
+    section.style.removeProperty("--stack-card-radius");
+
+    gsap.set(cards, {
+      clearProps: "transform",
+      opacity: 1,
+      x: 0,
+      y: 0,
+      rotateX: 0,
+      rotateY: 0,
+      rotateZ: 0,
+      scale: 1,
+      "--stack-front-opacity": 0,
+      "--stack-content-opacity": 1,
+      "--stack-content-y": "0px",
+    });
+  };
+
+  const unwrapStalePinSpacers = () => {
+    let changed = false;
+
+    ScrollTrigger.getAll().forEach((trigger) => {
+      if (!trigger.pin) return;
+
+      trigger.kill(true);
+      changed = true;
+    });
+
+    document.querySelectorAll(".pin-spacer").forEach((spacer) => {
+      const pinnedElement = Array.from(spacer.children).find((child) => child.nodeType === 1);
+
+      if (pinnedElement && spacer.parentNode) {
+        spacer.parentNode.insertBefore(pinnedElement, spacer);
+      }
+
+      spacer.remove();
+      changed = true;
+    });
+
+    resetMobileStack();
+
+    if (changed) {
+      requestAnimationFrame(() => ScrollTrigger.refresh());
+    }
+  };
+
+  const queueCleanup = () => {
+    if (!mobileLayout.matches || cleanupFrame) return;
+
+    cleanupFrame = requestAnimationFrame(() => {
+      cleanupFrame = 0;
+      unwrapStalePinSpacers();
+    });
+  };
+
+  queueCleanup();
+  window.addEventListener("resize", queueCleanup, { passive: true });
+  window.addEventListener("orientationchange", queueCleanup, { passive: true });
+  window.visualViewport?.addEventListener("resize", queueCleanup, { passive: true });
+}
+
 setupCursor();
 setupDeveloperScene();
 setupFlyingAccents();
@@ -1855,3 +1992,5 @@ setupMagneticButtons();
 setupMarqueeHover();
 setupCardSpotlights();
 setupMobileMenu();
+setupChromeTouchScrollSync();
+setupMobilePinSpacerCleanup();
