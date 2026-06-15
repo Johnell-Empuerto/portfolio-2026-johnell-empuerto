@@ -240,7 +240,9 @@ function setupAnimations() {
     },
   });
 
-  gsap.utils.toArray(".reveal:not(.skill-card)").forEach((element) => {
+  gsap.utils.toArray(
+    ".reveal:not(.skill-card):not(.experience-orbit):not(.experience-tabs):not(.projects-kicker):not(.project-card):not(.achievements-kicker):not(.achievements-tabs)"
+  ).forEach((element) => {
     gsap.to(element, {
       opacity: 1,
       y: 0,
@@ -389,6 +391,349 @@ function setupAnimations() {
       },
     });
   });
+}
+
+function setupProjectsEntrance() {
+  const section = document.querySelector("[data-projects-section]");
+  if (!section) return;
+
+  const kicker = section.querySelector(".projects-kicker");
+  const title = section.querySelector(".projects-title");
+  const cards = Array.from(section.querySelectorAll(".project-card"));
+
+  if (!cards.length) return;
+
+  if (!window.gsap || !window.ScrollTrigger || reducedMotion()) {
+    [kicker, title, ...cards].forEach((element) => {
+      if (!element) return;
+
+      element.style.opacity = "1";
+      element.style.transform = "none";
+      element.style.filter = "none";
+    });
+    return;
+  }
+
+  const visuals = cards.map((card) => card.querySelector(".project-visual")).filter(Boolean);
+  const numbers = cards.map((card) => card.querySelector(".project-visual span")).filter(Boolean);
+  const infoBlocks = cards.flatMap((card) => Array.from(card.querySelectorAll(".project-info > *")));
+
+  gsap.set(kicker, {
+    autoAlpha: 0,
+    y: 28,
+    filter: "blur(10px)",
+  });
+
+  gsap.set(cards, {
+    autoAlpha: 0,
+    y: 72,
+    scale: 0.965,
+    rotateX: 8,
+    filter: "blur(14px)",
+    transformOrigin: "center bottom",
+  });
+
+  gsap.set(visuals, {
+    scale: 0.92,
+    rotate: -2,
+    transformOrigin: "center center",
+  });
+
+  gsap.set(numbers, {
+    autoAlpha: 0,
+    scale: 1.55,
+    rotate: -10,
+    transformOrigin: "left top",
+  });
+
+  gsap.set(infoBlocks, {
+    autoAlpha: 0,
+    y: 18,
+  });
+
+  const entrance = gsap.timeline({ paused: true });
+
+  entrance
+    .to(kicker, {
+      autoAlpha: 1,
+      y: 0,
+      filter: "blur(0px)",
+      duration: 0.78,
+      ease: "power3.out",
+    })
+    .to(
+      cards,
+      {
+        autoAlpha: 1,
+        y: 0,
+        scale: 1,
+        rotateX: 0,
+        filter: "blur(0px)",
+        duration: 0.9,
+        stagger: 0.12,
+        ease: "power3.out",
+      },
+      "-=0.28"
+    )
+    .to(
+      visuals,
+      {
+        scale: 1,
+        rotate: 0,
+        duration: 0.9,
+        stagger: 0.12,
+        ease: "power3.out",
+      },
+      "<"
+    )
+    .to(
+      numbers,
+      {
+        autoAlpha: 1,
+        scale: 1,
+        rotate: 0,
+        duration: 0.58,
+        stagger: 0.08,
+        ease: "back.out(1.8)",
+      },
+      "-=0.52"
+    )
+    .to(
+      infoBlocks,
+      {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.58,
+        stagger: 0.025,
+        ease: "power2.out",
+      },
+      "-=0.62"
+    );
+
+  ScrollTrigger.create({
+    trigger: section,
+    start: "top 72%",
+    onEnter: () => entrance.play(),
+    onEnterBack: () => entrance.play(),
+    onLeaveBack: () => entrance.reverse(),
+    onRefresh: (self) => {
+      if (self.isActive || self.progress > 0) {
+        entrance.progress(1);
+      }
+    },
+  });
+
+  requestAnimationFrame(() => ScrollTrigger.refresh());
+}
+
+function setupAchievementsSection() {
+  const section = document.querySelector("[data-achievements-section]");
+  if (!section) return;
+
+  const kicker = section.querySelector(".achievements-kicker");
+  const title = section.querySelector(".achievements-title");
+  const tabs = Array.from(section.querySelectorAll("[data-achievement-tab]"));
+  const cards = Array.from(section.querySelectorAll("[data-achievement-card]"));
+  const media = Array.from(section.querySelectorAll(".achievement-media"));
+  const images = Array.from(section.querySelectorAll(".achievement-media img"));
+  const content = cards.flatMap((card) => Array.from(card.querySelectorAll(".achievement-content > *")));
+
+  if (!cards.length) return;
+
+  const maxIndex = cards.length - 1;
+  const clampIndex = (index) => Math.max(0, Math.min(maxIndex, index));
+
+  const setActiveAchievement = (index) => {
+    const activeIndex = clampIndex(index);
+
+    cards.forEach((card, cardIndex) => {
+      const isActive = cardIndex === activeIndex;
+      card.classList.toggle("is-active", isActive);
+
+      if (isActive) {
+        card.setAttribute("aria-current", "step");
+      } else {
+        card.removeAttribute("aria-current");
+      }
+    });
+
+    tabs.forEach((tab, tabIndex) => {
+      const isActive = tabIndex === activeIndex;
+      tab.classList.toggle("is-active", isActive);
+
+      if (isActive) {
+        tab.setAttribute("aria-current", "step");
+      } else {
+        tab.removeAttribute("aria-current");
+      }
+    });
+  };
+
+  cards.forEach((card, index) => {
+    card.addEventListener("pointerenter", () => setActiveAchievement(index));
+    card.addEventListener("focusin", () => setActiveAchievement(index));
+    card.addEventListener("click", () => setActiveAchievement(index));
+    card.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+
+      event.preventDefault();
+      setActiveAchievement(index);
+    });
+  });
+
+  tabs.forEach((tab, index) => {
+    tab.addEventListener("pointerenter", () => setActiveAchievement(index));
+    tab.addEventListener("focus", () => setActiveAchievement(index));
+    tab.addEventListener("click", () => {
+      setActiveAchievement(index);
+      cards[index]?.scrollIntoView({
+        block: "nearest",
+        behavior: reducedMotion() ? "auto" : "smooth",
+      });
+    });
+  });
+
+  setActiveAchievement(0);
+
+  if (!window.gsap || !window.ScrollTrigger || reducedMotion()) {
+    [kicker, title, ...tabs, ...cards].forEach((element) => {
+      if (!element) return;
+
+      element.style.opacity = "1";
+      element.style.transform = "none";
+      element.style.filter = "none";
+    });
+    return;
+  }
+
+  gsap.set(kicker, {
+    autoAlpha: 0,
+    y: 32,
+    filter: "blur(12px)",
+  });
+
+  gsap.set(tabs, {
+    autoAlpha: 0,
+    y: 18,
+    scale: 0.96,
+  });
+
+  gsap.set(cards, {
+    autoAlpha: 0,
+    y: 76,
+    rotateX: 8,
+    scale: 0.965,
+    filter: "blur(14px)",
+    transformOrigin: "center bottom",
+  });
+
+  gsap.set(media, {
+    clipPath: "inset(12% 10% round 26px)",
+  });
+
+  gsap.set(images, {
+    scale: 1.12,
+    filter: "saturate(0.8) contrast(0.95) blur(4px)",
+  });
+
+  gsap.set(content, {
+    autoAlpha: 0,
+    y: 18,
+  });
+
+  const entrance = gsap.timeline({ paused: true });
+
+  entrance
+    .to(kicker, {
+      autoAlpha: 1,
+      y: 0,
+      filter: "blur(0px)",
+      duration: 0.82,
+      ease: "power3.out",
+    })
+    .to(
+      tabs,
+      {
+        autoAlpha: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.58,
+        stagger: 0.08,
+        ease: "back.out(1.55)",
+      },
+      "-=0.36"
+    )
+    .to(
+      cards,
+      {
+        autoAlpha: 1,
+        y: 0,
+        rotateX: 0,
+        scale: 1,
+        filter: "blur(0px)",
+        duration: 0.9,
+        stagger: 0.16,
+        ease: "power3.out",
+      },
+      "-=0.22"
+    )
+    .to(
+      media,
+      {
+        clipPath: "inset(0% 0% round 26px)",
+        duration: 0.86,
+        stagger: 0.13,
+        ease: "power3.out",
+      },
+      "<"
+    )
+    .to(
+      images,
+      {
+        scale: 1,
+        filter: "saturate(1.05) contrast(1.02) blur(0px)",
+        duration: 1,
+        stagger: 0.13,
+        ease: "power3.out",
+      },
+      "<"
+    )
+    .to(
+      content,
+      {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.58,
+        stagger: 0.035,
+        ease: "power2.out",
+      },
+      "-=0.62"
+    );
+
+  ScrollTrigger.create({
+    trigger: section,
+    start: "top 72%",
+    onEnter: () => entrance.play(),
+    onEnterBack: () => entrance.play(),
+    onLeaveBack: () => entrance.reverse(),
+    onRefresh: (self) => {
+      if (self.isActive || self.progress > 0) {
+        entrance.progress(1);
+      }
+    },
+  });
+
+  images.forEach((image) => {
+    image.addEventListener(
+      "load",
+      () => {
+        ScrollTrigger.refresh();
+      },
+      { once: true }
+    );
+  });
+
+  requestAnimationFrame(() => ScrollTrigger.refresh());
 }
 
 function setupStoryGallery() {
@@ -790,6 +1135,368 @@ function setupStackStoryboard() {
     );
 }
 
+function setupExperienceJourney() {
+  const section = document.querySelector("[data-experience-section]");
+  if (!section) return;
+
+  const cards = Array.from(section.querySelectorAll("[data-experience-card]"));
+  const tabs = Array.from(section.querySelectorAll("[data-experience-tab]"));
+  const orbit = section.querySelector(".experience-orbit");
+  const nodes = Array.from(section.querySelectorAll(".experience-node"));
+
+  if (!cards.length) return;
+
+  const maxIndex = cards.length - 1;
+  const clampIndex = (index) => Math.max(0, Math.min(maxIndex, index));
+
+  const setActiveExperience = (index) => {
+    const activeIndex = clampIndex(index);
+
+    cards.forEach((card, cardIndex) => {
+      const isActive = cardIndex === activeIndex;
+      card.classList.toggle("is-active", isActive);
+
+      if (isActive) {
+        card.setAttribute("aria-current", "step");
+      } else {
+        card.removeAttribute("aria-current");
+      }
+    });
+
+    tabs.forEach((tab, tabIndex) => {
+      const isActive = tabIndex === activeIndex;
+      tab.classList.toggle("is-active", isActive);
+
+      if (isActive) {
+        tab.setAttribute("aria-current", "step");
+      } else {
+        tab.removeAttribute("aria-current");
+      }
+    });
+  };
+
+  cards.forEach((card, index) => {
+    card.addEventListener("pointerenter", () => setActiveExperience(index));
+    card.addEventListener("focusin", () => setActiveExperience(index));
+    card.addEventListener("click", () => setActiveExperience(index));
+    card.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+
+      event.preventDefault();
+      setActiveExperience(index);
+    });
+  });
+
+  tabs.forEach((tab, index) => {
+    tab.addEventListener("pointerenter", () => setActiveExperience(index));
+    tab.addEventListener("focus", () => setActiveExperience(index));
+    tab.addEventListener("click", () => {
+      setActiveExperience(index);
+      cards[index]?.scrollIntoView({
+        block: "nearest",
+        behavior: reducedMotion() ? "auto" : "smooth",
+      });
+    });
+  });
+
+  setActiveExperience(0);
+
+  if (!window.gsap || !window.ScrollTrigger || reducedMotion()) {
+    cards.forEach((card) => {
+      card.style.opacity = "1";
+      card.style.transform = "none";
+      card.style.filter = "none";
+    });
+    return;
+  }
+
+  gsap.set(cards, {
+    autoAlpha: 0,
+    x: 0,
+    y: 24,
+    rotateY: -8,
+    filter: "blur(12px)",
+    transformOrigin: "left center",
+  });
+  gsap.set(tabs, { autoAlpha: 0, x: -20 });
+  gsap.set(orbit, { autoAlpha: 0, scale: 0.9, rotate: -4 });
+  gsap.set(nodes, { scale: 0, transformOrigin: "center center" });
+
+  const entrance = gsap.timeline({
+    scrollTrigger: {
+      trigger: section,
+      start: "top 72%",
+      toggleActions: "play none none reverse",
+    },
+  });
+
+  entrance
+    .to(
+      orbit,
+      {
+        autoAlpha: 1,
+        scale: 1,
+        rotate: 0,
+        duration: 0.95,
+        ease: "back.out(1.35)",
+      },
+      0.1
+    )
+    .to(
+      nodes,
+      {
+        scale: 1,
+        duration: 0.44,
+        stagger: 0.08,
+        ease: "back.out(2)",
+      },
+      0.45
+    )
+    .to(
+      tabs,
+      {
+        autoAlpha: 1,
+        x: 0,
+        duration: 0.58,
+        stagger: 0.07,
+        ease: "power3.out",
+      },
+      0.25
+    )
+    .to(
+      cards,
+      {
+        autoAlpha: 1,
+        x: 0,
+        y: 0,
+        rotateY: 0,
+        filter: "blur(0px)",
+        duration: 0.82,
+        stagger: 0.13,
+        ease: "power3.out",
+      },
+      0.34
+    );
+
+  gsap.to(".experience-orbit", {
+    y: -26,
+    rotate: 2.6,
+    ease: "none",
+    scrollTrigger: {
+      trigger: section,
+      start: "top bottom",
+      end: "bottom top",
+      scrub: 1.2,
+    },
+  });
+
+  ScrollTrigger.create({
+    trigger: section,
+    start: "top top",
+    end: "bottom 48%",
+    onUpdate: () => {
+      const userIsInteracting = section.matches(":hover") || section.contains(document.activeElement);
+
+      if (userIsInteracting) return;
+
+      const rect = section.getBoundingClientRect();
+      const startLine = window.innerHeight * 0.16;
+      const endLine = window.innerHeight * 0.58;
+
+      if (rect.top > startLine) {
+        setActiveExperience(0);
+        return;
+      }
+
+      if (rect.bottom < endLine) {
+        setActiveExperience(maxIndex);
+        return;
+      }
+
+      const travel = Math.max(1, rect.height - endLine + startLine);
+      const progressValue = Math.max(0, Math.min(1, (startLine - rect.top) / travel));
+      setActiveExperience(Math.round(progressValue * maxIndex));
+    },
+  });
+}
+
+function setupEducationExperience() {
+  const section = document.querySelector("[data-education-section]");
+  if (!section) return;
+
+  const cards = Array.from(section.querySelectorAll("[data-education-card]"));
+  const markers = Array.from(section.querySelectorAll("[data-education-marker]"));
+  const progress = section.querySelector("[data-education-progress]");
+  const artLayers = Array.from(section.querySelectorAll(".education-art > span"));
+
+  if (!cards.length) return;
+
+  const maxIndex = cards.length - 1;
+  const clampIndex = (index) => Math.max(0, Math.min(maxIndex, index));
+
+  const setActiveEducation = (index) => {
+    const activeIndex = clampIndex(index);
+    const progressValue = maxIndex ? `${(activeIndex / maxIndex) * 100}%` : "100%";
+
+    if (progress) {
+      progress.style.setProperty("--education-progress", progressValue);
+    }
+
+    cards.forEach((card, cardIndex) => {
+      const isActive = cardIndex === activeIndex;
+      card.classList.toggle("is-active", isActive);
+
+      if (isActive) {
+        card.setAttribute("aria-current", "step");
+      } else {
+        card.removeAttribute("aria-current");
+      }
+    });
+
+    markers.forEach((marker, markerIndex) => {
+      const isActive = markerIndex === activeIndex;
+      marker.classList.toggle("is-active", isActive);
+
+      if (isActive) {
+        marker.setAttribute("aria-current", "step");
+      } else {
+        marker.removeAttribute("aria-current");
+      }
+    });
+  };
+
+  cards.forEach((card, index) => {
+    card.addEventListener("pointerenter", () => setActiveEducation(index));
+    card.addEventListener("focusin", () => setActiveEducation(index));
+    card.addEventListener("click", () => setActiveEducation(index));
+    card.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+
+      event.preventDefault();
+      setActiveEducation(index);
+    });
+  });
+
+  markers.forEach((marker, index) => {
+    marker.addEventListener("pointerenter", () => setActiveEducation(index));
+    marker.addEventListener("focus", () => setActiveEducation(index));
+    marker.addEventListener("click", () => {
+      setActiveEducation(index);
+      cards[index]?.scrollIntoView({
+        block: "nearest",
+        behavior: reducedMotion() ? "auto" : "smooth",
+      });
+    });
+  });
+
+  setActiveEducation(0);
+
+  if (!window.gsap || !window.ScrollTrigger || reducedMotion()) {
+    cards.forEach((card) => {
+      card.style.opacity = "1";
+      card.style.transform = "none";
+      card.style.filter = "none";
+    });
+    return;
+  }
+
+  gsap.set(cards, {
+    autoAlpha: 0,
+    y: 46,
+    rotateX: 8,
+    filter: "blur(12px)",
+    transformOrigin: "center bottom",
+  });
+  gsap.set(markers, { autoAlpha: 0, x: -18 });
+  gsap.set(artLayers, { autoAlpha: 0, scale: 0.92, rotate: -3 });
+
+  gsap
+    .timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top 72%",
+        toggleActions: "play none none reverse",
+      },
+    })
+    .to(
+      artLayers,
+      {
+        autoAlpha: 1,
+        scale: 1,
+        rotate: 0,
+        duration: 1,
+        stagger: 0.1,
+        ease: "power3.out",
+      },
+      0
+    )
+    .to(
+      markers,
+      {
+        autoAlpha: 1,
+        x: 0,
+        duration: 0.62,
+        stagger: 0.08,
+        ease: "back.out(1.7)",
+      },
+      0.12
+    )
+    .to(
+      cards,
+      {
+        autoAlpha: 1,
+        y: 0,
+        rotateX: 0,
+        filter: "blur(0px)",
+        duration: 0.86,
+        stagger: 0.13,
+        ease: "power3.out",
+      },
+      0.22
+    );
+
+  gsap.to(".education-art-ring", {
+    rotate: 18,
+    y: -36,
+    ease: "none",
+    scrollTrigger: {
+      trigger: section,
+      start: "top bottom",
+      end: "bottom top",
+      scrub: 1.2,
+    },
+  });
+
+  ScrollTrigger.create({
+    trigger: section,
+    start: "top top",
+    end: "bottom 46%",
+    onUpdate: () => {
+      const userIsInteracting = section.matches(":hover") || section.contains(document.activeElement);
+
+      if (userIsInteracting) return;
+
+      const rect = section.getBoundingClientRect();
+      const startLine = window.innerHeight * 0.14;
+      const endLine = window.innerHeight * 0.62;
+
+      if (rect.top > startLine) {
+        setActiveEducation(0);
+        return;
+      }
+
+      if (rect.bottom < endLine) {
+        setActiveEducation(maxIndex);
+        return;
+      }
+
+      const travel = Math.max(1, rect.height - endLine + startLine);
+      const progressValue = Math.max(0, Math.min(1, (startLine - rect.top) / travel));
+      setActiveEducation(Math.round(progressValue * maxIndex));
+    },
+  });
+}
+
 function setupScrollTextReveal() {
   const titles = document.querySelectorAll(".section-title:not([data-no-scroll-split])");
   if (!titles.length) return;
@@ -1034,7 +1741,7 @@ function setupArtParallax() {
 
 function setupCardSpotlights() {
   const cards = document.querySelectorAll(
-    ".about-panel, .project-card, .experience-card, .education-card, .reference-card, .contact-card, .hero-metrics div"
+    ".about-panel, .project-card, .achievement-card, .experience-card, .education-card, .reference-card, .contact-card, .hero-metrics div"
   );
   const canTilt = window.matchMedia("(pointer: fine)").matches && !reducedMotion() && window.gsap;
 
@@ -1137,7 +1844,11 @@ setupCursor();
 setupDeveloperScene();
 setupFlyingAccents();
 setupAnimations();
+setupProjectsEntrance();
+setupAchievementsSection();
 setupStackStoryboard();
+setupExperienceJourney();
+setupEducationExperience();
 setupScrollTextReveal();
 setupArtParallax();
 setupMagneticButtons();

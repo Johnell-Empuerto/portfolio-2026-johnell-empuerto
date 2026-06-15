@@ -16,7 +16,10 @@
       rel="stylesheet"
     />
 
-    <link rel="stylesheet" href="./styles.css?v=20260614-profile-static" />
+    <link
+      rel="stylesheet"
+      href="./styles.min.css?v=20260615-achievements-art"
+    />
   </head>
 
   <body>
@@ -47,6 +50,8 @@
         <a href="#skills">Stack</a>
         <a href="#experience">Experience</a>
         <a href="#projects">Projects</a>
+        <a href="#achievements">Achievements</a>
+        <a href="#education">Education</a>
         <a href="#contact">Contact</a>
       </nav>
 
@@ -68,6 +73,8 @@
         <a href="#skills">Stack</a>
         <a href="#experience">Experience</a>
         <a href="#projects">Projects</a>
+        <a href="#achievements">Achievements</a>
+        <a href="#education">Education</a>
         <a href="#contact">Contact</a>
       </nav>
       <div class="mobile-menu-footer">
@@ -351,144 +358,241 @@
         </div>
       </section>
 
-      <section class="section experience-section" id="experience">
-        <div class="section-kicker reveal">Experience</div>
-        <h2 class="section-title reveal">Professional journey.</h2>
+      <section
+        class="section experience-section"
+        id="experience"
+        data-experience-section
+      >
+        <div class="experience-header">
+          <div>
+            <div class="section-kicker reveal">Experience</div>
+            <h2 class="section-title experience-title reveal">
+              Professional journey.
+            </h2>
+          </div>
+          <p class="experience-intro reveal">
+            From freelance prototypes to production-grade manufacturing systems,
+            each role sharpened how I design reliable tools for real users.
+          </p>
+        </div>
 
-        <div class="experience-list">
-          <article class="experience-card reveal">
-            <div class="experience-meta">
-              <span class="experience-date">2025 – Present</span>
-              <h3>Software Engineer — NPAX</h3>
-              <p class="experience-clients">
-                Clients: Isuzu, Honda, Taiyo Yuden, Asahi Group Japan, Fuji
-                Electric Philippines
-              </p>
-            </div>
-            <div class="experience-details">
-              <ul>
-                <li>
-                  Developed web, desktop, and mobile production systems used
-                  daily by operators and supervisors
-                </li>
-                <li>
-                  Built real-time dashboards using Grafana, PostgreSQL, MySQL,
-                  and Oracle
-                </li>
-                <li>
-                  Developed customized ReactJS and ExpressJS dashboard/chart
-                  systems for production analytics
-                </li>
-                <li>
-                  Implemented paperless production solutions using iReporter
-                  (Rakupad) from BENG Japan
-                </li>
-                <li>
-                  Customized iReporter workflows, forms, and reporting systems
-                  based on client requirements
-                </li>
-                <li>
-                  Developed Daily Production Entry systems for operator
-                  reporting and machine monitoring
-                </li>
-                <li>
-                  Built REST API integrations for manufacturing systems and
-                  reporting platforms
-                </li>
-              </ul>
-              <div class="experience-tags">
-                <span>ReactJS</span><span>AngularJS</span><span>Flutter</span
-                ><span>ExpressJS</span><span>Node-RED</span><span>Grafana</span
-                ><span>PostgreSQL</span><span>MySQL</span><span>Oracle</span>
-              </div>
-            </div>
-          </article>
+        <div class="experience-showcase">
+          <div class="experience-orbit reveal" aria-hidden="true">
+            <span class="experience-orbit-ring ring-a"></span>
+            <span class="experience-orbit-ring ring-b"></span>
+            <span class="experience-orbit-core">4</span>
+            <span class="experience-orbit-label">Career stages</span>
+            <span class="experience-node node-one"></span>
+            <span class="experience-node node-two"></span>
+            <span class="experience-node node-three"></span>
+            <span class="experience-node node-four"></span>
+          </div>
 
-          <article class="experience-card reveal">
-            <div class="experience-meta">
-              <span class="experience-date">2024</span>
-              <h3>
-                Website Developer — Bexte Touristik
-                <span class="experience-badge">Part-time</span>
-              </h3>
-              <p class="experience-clients">Remote</p>
-            </div>
-            <div class="experience-details">
-              <ul>
-                <li>
-                  Developed responsive tourism website using HTML, CSS, PHP, and
-                  Bootstrap
-                </li>
-                <li>
-                  Built custom modules for tour listings, contact forms, and
-                  location services
-                </li>
-                <li>Improved mobile responsiveness and website performance</li>
-                <li>Managed updates for promotions and tourism packages</li>
-              </ul>
-              <div class="experience-tags">
-                <span>HTML</span><span>CSS</span><span>PHP</span
-                ><span>Bootstrap</span>
-              </div>
-            </div>
-          </article>
+          <div class="experience-tabs reveal" aria-label="Experience timeline">
+            <button
+              class="experience-tab is-active"
+              type="button"
+              data-experience-tab="0"
+              aria-current="step"
+            >
+              <span>2025</span>
+              <strong>NPAX</strong>
+            </button>
+            <button
+              class="experience-tab"
+              type="button"
+              data-experience-tab="1"
+            >
+              <span>2024</span>
+              <strong>Bexte</strong>
+            </button>
+            <button
+              class="experience-tab"
+              type="button"
+              data-experience-tab="2"
+            >
+              <span>2023</span>
+              <strong>Proweaver</strong>
+            </button>
+            <button
+              class="experience-tab"
+              type="button"
+              data-experience-tab="3"
+            >
+              <span>2022</span>
+              <strong>Freelance</strong>
+            </button>
+          </div>
 
-          <article class="experience-card reveal">
-            <div class="experience-meta">
-              <span class="experience-date">2023 – 2024</span>
-              <h3>Website Developer — Proweaver Inc.</h3>
-              <p class="experience-clients">Cebu City, Philippines</p>
-            </div>
-            <div class="experience-details">
-              <ul>
-                <li>Developed custom WordPress themes and plugins</li>
-                <li>
-                  Customized websites using PHP, HTML, CSS, and JavaScript
-                </li>
-                <li>
-                  Built responsive and SEO-friendly websites for international
-                  clients
-                </li>
-                <li>
-                  Improved website speed, performance, and user experience
-                </li>
-              </ul>
-              <div class="experience-tags">
-                <span>PHP</span><span>HTML</span><span>CSS</span
-                ><span>JavaScript</span><span>WordPress</span>
+          <div class="experience-list">
+            <article
+              class="experience-card is-active"
+              data-experience-card
+              role="button"
+              tabindex="0"
+              aria-current="step"
+            >
+              <div class="experience-meta">
+                <span class="experience-date">2025 - Present</span>
+                <h3>Software Engineer - NPAX</h3>
+                <p class="experience-clients">
+                  Clients: Isuzu, Honda, Taiyo Yuden, Asahi Group Japan, Fuji
+                  Electric Philippines
+                </p>
               </div>
-            </div>
-          </article>
+              <div class="experience-details">
+                <p class="experience-focus">
+                  Manufacturing systems and dashboards
+                </p>
+                <ul>
+                  <li>
+                    Developed web, desktop, and mobile production systems used
+                    daily by operators and supervisors
+                  </li>
+                  <li>
+                    Built real-time dashboards using Grafana, PostgreSQL, MySQL,
+                    and Oracle
+                  </li>
+                  <li>
+                    Implemented paperless production solutions using iReporter
+                    and custom reporting workflows
+                  </li>
+                  <li>
+                    Built REST API integrations for manufacturing systems and
+                    reporting platforms
+                  </li>
+                </ul>
+                <div class="experience-tags">
+                  <span>ReactJS</span><span>AngularJS</span><span>Flutter</span
+                  ><span>ExpressJS</span><span>Node-RED</span
+                  ><span>Grafana</span><span>PostgreSQL</span><span>MySQL</span
+                  ><span>Oracle</span>
+                </div>
+              </div>
+              <span class="experience-index" aria-hidden="true">01</span>
+            </article>
 
-          <article class="experience-card reveal">
-            <div class="experience-meta">
-              <span class="experience-date">2022 – 2023</span>
-              <h3>Freelancer — Web & Embedded Systems Developer</h3>
-              <p class="experience-clients">Philippines</p>
-            </div>
-            <div class="experience-details">
-              <ul>
-                <li>
-                  Developed websites and small business systems for local and
-                  international clients
-                </li>
-                <li>
-                  Assisted with Arduino, ESP8266, and Raspberry Pi projects
-                </li>
-                <li>Built IoT prototypes and smart device integrations</li>
-              </ul>
-              <div class="experience-tags">
-                <span>Arduino</span><span>ESP8266</span><span>Raspberry Pi</span
-                ><span>IoT</span>
+            <article
+              class="experience-card"
+              data-experience-card
+              role="button"
+              tabindex="0"
+            >
+              <div class="experience-meta">
+                <span class="experience-date">2024</span>
+                <h3>
+                  Website Developer - Bexte Touristik
+                  <span class="experience-badge">Part-time</span>
+                </h3>
+                <p class="experience-clients">Remote</p>
               </div>
-            </div>
-          </article>
+              <div class="experience-details">
+                <p class="experience-focus">
+                  Tourism website and custom modules
+                </p>
+                <ul>
+                  <li>
+                    Developed responsive tourism website using HTML, CSS, PHP,
+                    and Bootstrap
+                  </li>
+                  <li>
+                    Built custom modules for tour listings, contact forms, and
+                    location services
+                  </li>
+                  <li>
+                    Improved mobile responsiveness and website performance
+                  </li>
+                  <li>Managed updates for promotions and tourism packages</li>
+                </ul>
+                <div class="experience-tags">
+                  <span>HTML</span><span>CSS</span><span>PHP</span
+                  ><span>Bootstrap</span>
+                </div>
+              </div>
+              <span class="experience-index" aria-hidden="true">02</span>
+            </article>
+
+            <article
+              class="experience-card"
+              data-experience-card
+              role="button"
+              tabindex="0"
+            >
+              <div class="experience-meta">
+                <span class="experience-date">2023 - 2024</span>
+                <h3>Website Developer - Proweaver Inc.</h3>
+                <p class="experience-clients">Cebu City, Philippines</p>
+              </div>
+              <div class="experience-details">
+                <p class="experience-focus">
+                  WordPress builds for international clients
+                </p>
+                <ul>
+                  <li>Developed custom WordPress themes and plugins</li>
+                  <li>
+                    Customized websites using PHP, HTML, CSS, and JavaScript
+                  </li>
+                  <li>
+                    Built responsive and SEO-friendly websites for international
+                    clients
+                  </li>
+                  <li>
+                    Improved website speed, performance, and user experience
+                  </li>
+                </ul>
+                <div class="experience-tags">
+                  <span>PHP</span><span>HTML</span><span>CSS</span
+                  ><span>JavaScript</span><span>WordPress</span>
+                </div>
+              </div>
+              <span class="experience-index" aria-hidden="true">03</span>
+            </article>
+
+            <article
+              class="experience-card"
+              data-experience-card
+              role="button"
+              tabindex="0"
+            >
+              <div class="experience-meta">
+                <span class="experience-date">2022 - 2023</span>
+                <h3>Freelancer - Web & Embedded Systems Developer</h3>
+                <p class="experience-clients">Philippines</p>
+              </div>
+              <div class="experience-details">
+                <p class="experience-focus">
+                  Small business systems and IoT prototypes
+                </p>
+                <ul>
+                  <li>
+                    Developed websites and small business systems for local and
+                    international clients
+                  </li>
+                  <li>
+                    Assisted with Arduino, ESP8266, and Raspberry Pi projects
+                  </li>
+                  <li>Built IoT prototypes and smart device integrations</li>
+                </ul>
+                <div class="experience-tags">
+                  <span>Arduino</span><span>ESP8266</span
+                  ><span>Raspberry Pi</span><span>IoT</span>
+                </div>
+              </div>
+              <span class="experience-index" aria-hidden="true">04</span>
+            </article>
+          </div>
         </div>
       </section>
 
-      <section class="section projects-section" id="projects">
-        <div class="section-kicker reveal">Projects</div>
-        <h2 class="section-title reveal">Real-world systems I have built.</h2>
+      <section
+        class="section projects-section"
+        id="projects"
+        data-projects-section
+      >
+        <div class="section-kicker projects-kicker reveal">Projects</div>
+        <h2 class="section-title projects-title reveal">
+          Real-world systems I have built.
+        </h2>
 
         <div class="project-list">
           <article class="project-card reveal">
@@ -613,16 +717,231 @@
         </div>
       </section>
 
-      <section class="section education-section">
-        <div class="section-kicker reveal">Education</div>
-        <h2 class="section-title reveal">Academic background.</h2>
-
-        <div class="education-card reveal">
-          <div class="education-icon">CTU</div>
+      <section
+        class="section achievements-section"
+        id="achievements"
+        data-achievements-section
+      >
+        <div class="achievements-header">
           <div>
-            <h3>Cebu Technological University – Barili Campus</h3>
-            <p class="education-degree">Bachelor of Industrial Technology</p>
-            <p class="education-year">2018 – 2022</p>
+            <div class="section-kicker achievements-kicker reveal">
+              Achievements
+            </div>
+            <h2 class="section-title achievements-title reveal">
+              Recognition earned through delivery.
+            </h2>
+          </div>
+          <p class="achievements-intro reveal">
+            Milestones from shipping production systems, supporting real
+            clients, and helping other developers grow inside the team.
+          </p>
+        </div>
+
+        <div class="achievements-showcase">
+          <div
+            class="achievements-tabs reveal"
+            aria-label="Achievement highlights"
+          >
+            <button
+              class="achievement-tab is-active"
+              type="button"
+              data-achievement-tab="0"
+              aria-current="step"
+            >
+              <span>2025</span>
+              <strong>NPAX Rookie</strong>
+            </button>
+            <button
+              class="achievement-tab"
+              type="button"
+              data-achievement-tab="1"
+            >
+              <span>Team</span>
+              <strong>Senior Dev</strong>
+            </button>
+          </div>
+
+          <div class="achievements-grid">
+            <article
+              class="achievement-card is-active"
+              data-achievement-card
+              role="button"
+              tabindex="0"
+              aria-current="step"
+            >
+              <figure class="achievement-media">
+                <img
+                  src="./images/achievement-npax.jpg"
+                  alt="Johnell Empuerto receiving the 2025 NPAX Rookie of the Year award"
+                />
+              </figure>
+              <div class="achievement-content">
+                <p class="achievement-year">2025 / NPAX</p>
+                <h3>Rookie of the Year</h3>
+                <p>
+                  Recognized after deploying and maintaining multiple production
+                  systems with consistent support for manufacturing clients.
+                </p>
+                <div class="achievement-clients" aria-label="Supported clients">
+                  <span>Isuzu</span><span>Honda</span><span>Taiyo Yuden</span
+                  ><span>AGC</span><span>FEP</span><span>Daikuko</span
+                  ><span>Asahi</span>
+                </div>
+              </div>
+              <span class="achievement-index" aria-hidden="true">01</span>
+            </article>
+
+            <article
+              class="achievement-card"
+              data-achievement-card
+              role="button"
+              tabindex="0"
+            >
+              <figure class="achievement-media">
+                <img
+                  src="./images/achievement-proweaver.png"
+                  alt="Johnell Empuerto at Proweaver work station"
+                />
+              </figure>
+              <div class="achievement-content">
+                <p class="achievement-year">Proweaver / Team Growth</p>
+                <h3>Senior Developer Mentor</h3>
+                <p>
+                  Grew into a senior developer within the team, guiding
+                  probationary developers and trainees through standards,
+                  debugging, and delivery habits.
+                </p>
+                <div class="achievement-clients" aria-label="Mentoring focus">
+                  <span>Code Reviews</span><span>Training</span
+                  ><span>Team Guidance</span><span>Quality Standards</span>
+                </div>
+              </div>
+              <span class="achievement-index" aria-hidden="true">02</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="section education-section"
+        id="education"
+        data-education-section
+      >
+        <div class="education-header">
+          <div>
+            <div class="section-kicker reveal">Education</div>
+            <h2 class="section-title reveal">Academic journey.</h2>
+          </div>
+          <p class="education-intro reveal">
+            A practical learning path shaped by industrial technology,
+            problem-solving, and the foundations that led into software systems.
+          </p>
+        </div>
+
+        <div class="education-showcase">
+          <div class="education-art" aria-hidden="true">
+            <span class="education-art-grid"></span>
+            <span class="education-art-ring"></span>
+            <span class="education-art-ribbon"></span>
+          </div>
+
+          <div class="education-rail reveal" aria-label="Academic milestones">
+            <div class="education-progress">
+              <span data-education-progress></span>
+            </div>
+            <button
+              class="education-marker is-active"
+              type="button"
+              data-education-marker="0"
+              aria-current="step"
+            >
+              <span>01</span>
+              <strong>College</strong>
+            </button>
+            <button
+              class="education-marker"
+              type="button"
+              data-education-marker="1"
+            >
+              <span>02</span>
+              <strong>High School</strong>
+            </button>
+            <button
+              class="education-marker"
+              type="button"
+              data-education-marker="2"
+            >
+              <span>03</span>
+              <strong>Elementary</strong>
+            </button>
+          </div>
+
+          <div class="education-cards">
+            <article
+              class="education-card is-active"
+              data-education-card
+              role="button"
+              tabindex="0"
+              aria-current="step"
+            >
+              <div class="education-icon" aria-hidden="true">CTU</div>
+              <div class="education-card-body">
+                <p class="education-phase">College / Applied Technology</p>
+                <h3>Cebu Technological University - Barili Campus</h3>
+                <p class="education-degree">
+                  Bachelor of Industrial Technology
+                </p>
+                <p class="education-year">2018 - 2022</p>
+                <ul class="education-highlights">
+                  <li>Industrial systems</li>
+                  <li>Technical foundation</li>
+                  <li>Applied problem-solving</li>
+                </ul>
+              </div>
+              <span class="education-card-index" aria-hidden="true">01</span>
+            </article>
+
+            <article
+              class="education-card"
+              data-education-card
+              role="button"
+              tabindex="0"
+            >
+              <div class="education-icon" aria-hidden="true">HS</div>
+              <div class="education-card-body">
+                <p class="education-phase">Secondary / Builder Stage</p>
+                <h3>Mantalongon National High School</h3>
+                <p class="education-degree">Secondary Education</p>
+                <p class="education-year">Mantalongon, Barili</p>
+                <ul class="education-highlights">
+                  <li>Core academics</li>
+                  <li>Team discipline</li>
+                  <li>Curiosity for technology</li>
+                </ul>
+              </div>
+              <span class="education-card-index" aria-hidden="true">02</span>
+            </article>
+
+            <article
+              class="education-card"
+              data-education-card
+              role="button"
+              tabindex="0"
+            >
+              <div class="education-icon" aria-hidden="true">ES</div>
+              <div class="education-card-body">
+                <p class="education-phase">Foundation / Starting Point</p>
+                <h3>Mantalongon Elementary School</h3>
+                <p class="education-degree">Elementary Education</p>
+                <p class="education-year">Mantalongon, Barili</p>
+                <ul class="education-highlights">
+                  <li>Learning habits</li>
+                  <li>Creative confidence</li>
+                  <li>Academic foundation</li>
+                </ul>
+              </div>
+              <span class="education-card-index" aria-hidden="true">03</span>
+            </article>
           </div>
         </div>
       </section>
@@ -692,6 +1011,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
     <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-    <script src="./main.js?v=20260614-profile-static"></script>
+    <script src="./main.min.js?v=20260615-achievements-art"></script>
   </body>
 </html>
