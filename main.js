@@ -1004,26 +1004,23 @@ function setupStoryGallery() {
 function setupStackStoryboard() {
   const section = document.querySelector(".skills-section");
   const grid = section?.querySelector(".skills-grid");
-  const cards = window.gsap ? gsap.utils.toArray(".skills-grid .skill-card") : [];
-  const isTouchLike =
-    window.matchMedia("(pointer: coarse)").matches || window.matchMedia("(hover: none)").matches;
+  const cards = window.gsap
+    ? gsap.utils.toArray(".skills-grid .skill-card")
+    : Array.from(document.querySelectorAll(".skills-grid .skill-card"));
 
   if (!section || !grid) {
     return;
   }
 
-  if (!window.gsap || !window.ScrollTrigger || reducedMotion() || !cards.length) {
-    section.classList.add("is-stack-revealed");
-    return;
-  }
+  section.classList.add("is-stack-revealed");
+  section.classList.remove("is-stack-story");
+  section.style.removeProperty("--stack-gap");
 
-  const hasStackRoom = window.matchMedia("(min-width: 981px)").matches;
+  if (!cards.length) return;
 
-  if (!hasStackRoom || isTouchLike) {
-    section.classList.add("is-stack-revealed");
-    section.classList.remove("is-stack-story");
-
+  if (window.gsap) {
     gsap.set(cards, {
+      clearProps: "transform,filter",
       opacity: 1,
       x: 0,
       y: 0,
@@ -1031,127 +1028,15 @@ function setupStackStoryboard() {
       rotateY: 0,
       rotateZ: 0,
       scale: 1,
-      "--stack-front-opacity": 0,
-      "--stack-content-opacity": 1,
-      "--stack-content-y": "0px",
     });
     return;
   }
 
-  section.classList.add("is-stack-story");
-  section.classList.remove("is-stack-revealed");
-
-  const breakOffsets = [
-    { x: -34, y: -18, rotateY: -18, rotateZ: -3.8 },
-    { x: 0, y: -30, rotateY: 10, rotateZ: 2.4 },
-    { x: 36, y: -16, rotateY: 20, rotateZ: 4.2 },
-    { x: -38, y: 18, rotateY: -22, rotateZ: 4 },
-    { x: 0, y: 32, rotateY: -10, rotateZ: -2.2 },
-    { x: 40, y: 18, rotateY: 18, rotateZ: -4.4 },
-  ];
-
-  gsap.set(section, {
-    "--stack-gap": "0px",
-    "--stack-card-radius": "14px",
+  cards.forEach((card) => {
+    card.style.opacity = "1";
+    card.style.transform = "none";
+    card.style.filter = "none";
   });
-
-  gsap.set(cards, {
-    opacity: 1,
-    x: 0,
-    y: 0,
-    rotateX: 0,
-    rotateY: 0,
-    rotateZ: 0,
-    scale: 1,
-    transformOrigin: "center center",
-    "--stack-front-opacity": 1,
-    "--stack-front-rotate": "0deg",
-    "--stack-content-opacity": 0,
-    "--stack-content-y": "24px",
-  });
-
-  gsap
-    .timeline({
-      scrollTrigger: {
-        trigger: section,
-        start: "top top",
-        end: "+=155%",
-        scrub: 1,
-        pin: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          section.classList.toggle("is-stack-revealed", self.progress > 0.985);
-        },
-        onLeave: () => section.classList.add("is-stack-revealed"),
-        onEnterBack: () => section.classList.remove("is-stack-revealed"),
-        onRefresh: (self) => {
-          section.classList.toggle("is-stack-revealed", self.progress > 0.985);
-        },
-      },
-    })
-    .to(
-      section,
-      {
-        "--stack-gap": "18px",
-        "--stack-card-radius": "24px",
-        duration: 0.38,
-        ease: "power2.inOut",
-      },
-      0
-    )
-    .to(
-      cards,
-      {
-        x: (index) => breakOffsets[index]?.x || 0,
-        y: (index) => breakOffsets[index]?.y || 0,
-        rotateY: (index) => breakOffsets[index]?.rotateY || 0,
-        rotateZ: (index) => breakOffsets[index]?.rotateZ || 0,
-        scale: 0.965,
-        duration: 0.38,
-        stagger: { each: 0.025, from: "center" },
-        ease: "power2.inOut",
-      },
-      0.08
-    )
-    .to(
-      cards,
-      {
-        "--stack-front-rotate": "-125deg",
-        "--stack-front-opacity": 0.05,
-        duration: 0.34,
-        stagger: { each: 0.032, from: "center" },
-        ease: "power2.in",
-      },
-      0.28
-    )
-    .to(
-      cards,
-      {
-        x: 0,
-        y: 0,
-        rotateX: 0,
-        rotateY: 0,
-        rotateZ: 0,
-        scale: 1,
-        duration: 0.5,
-        stagger: { each: 0.034, from: "center" },
-        ease: "back.out(1.25)",
-      },
-      0.46
-    )
-    .to(
-      cards,
-      {
-        "--stack-front-opacity": 0,
-        "--stack-content-opacity": 1,
-        "--stack-content-y": "0px",
-        duration: 0.36,
-        stagger: { each: 0.032, from: "center" },
-        ease: "power2.out",
-      },
-      0.56
-    );
 }
 
 function setupExperienceJourney() {
@@ -1917,7 +1802,6 @@ function setupMobilePinSpacerCleanup() {
     section.classList.add("is-stack-revealed");
     section.classList.remove("is-stack-story");
     section.style.removeProperty("--stack-gap");
-    section.style.removeProperty("--stack-card-radius");
 
     gsap.set(cards, {
       clearProps: "transform",
@@ -1928,9 +1812,6 @@ function setupMobilePinSpacerCleanup() {
       rotateY: 0,
       rotateZ: 0,
       scale: 1,
-      "--stack-front-opacity": 0,
-      "--stack-content-opacity": 1,
-      "--stack-content-y": "0px",
     });
   };
 
