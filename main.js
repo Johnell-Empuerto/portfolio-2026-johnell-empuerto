@@ -1977,6 +1977,62 @@ function setupMobilePinSpacerCleanup() {
   window.visualViewport?.addEventListener("resize", queueCleanup, { passive: true });
 }
 
+function setupMobileFooterScrollClamp() {
+  const footer = document.querySelector(".site-footer");
+  const mobileFooterLayout = window.matchMedia("(max-width: 640px)");
+
+  if (!footer) return;
+
+  let clampFrame = 0;
+  let refreshTimer = 0;
+
+  const maxFooterScroll = () => {
+    const viewportHeight = window.visualViewport?.height || window.innerHeight;
+    const footerBottom = footer.getBoundingClientRect().bottom + window.scrollY;
+
+    return Math.max(0, Math.ceil(footerBottom - viewportHeight));
+  };
+
+  const clampScroll = () => {
+    clampFrame = 0;
+
+    if (!mobileFooterLayout.matches) return;
+
+    const maxScroll = maxFooterScroll();
+
+    if (window.scrollY > maxScroll + 2) {
+      window.scrollTo(0, maxScroll);
+    }
+  };
+
+  const queueClamp = () => {
+    if (clampFrame) return;
+
+    clampFrame = requestAnimationFrame(clampScroll);
+  };
+
+  const refreshClamp = () => {
+    queueClamp();
+    clearTimeout(refreshTimer);
+    refreshTimer = window.setTimeout(queueClamp, 220);
+  };
+
+  window.addEventListener("scroll", queueClamp, { passive: true });
+  window.addEventListener("resize", refreshClamp, { passive: true });
+  window.addEventListener("orientationchange", refreshClamp, { passive: true });
+  window.visualViewport?.addEventListener("resize", refreshClamp, { passive: true });
+
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(refreshClamp).catch(() => {});
+  }
+
+  if (document.readyState === "complete") {
+    refreshClamp();
+  } else {
+    window.addEventListener("load", refreshClamp, { once: true });
+  }
+}
+
 setupCursor();
 setupDeveloperScene();
 setupFlyingAccents();
@@ -1994,3 +2050,4 @@ setupCardSpotlights();
 setupMobileMenu();
 setupChromeTouchScrollSync();
 setupMobilePinSpacerCleanup();
+setupMobileFooterScrollClamp();
