@@ -40,6 +40,7 @@ function setupSectionOrder() {
   if (!main) return;
 
   [
+    document.querySelector("#gateway"),
     document.querySelector("#hero"),
     document.querySelector(".marquee-section"),
     document.querySelector("#projects"),
@@ -59,6 +60,115 @@ function setupSectionOrder() {
 }
 
 setupSectionOrder();
+
+function setupGatewayIntro() {
+  const gateway = document.querySelector("#gateway");
+  if (!gateway || !window.gsap || !window.ScrollTrigger || reducedMotion()) return;
+
+  const shell = gateway.querySelector(".gateway-shell");
+  const scene = gateway.querySelector(".gateway-scene");
+  const content = gateway.querySelector(".gateway-content");
+  const scrollCue = gateway.querySelector(".gateway-scroll");
+  const nodes = gsap.utils.toArray(gateway.querySelectorAll(".gateway-node"));
+  const header = document.querySelector(".site-header");
+  const isMobile = window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
+  const clamp01 = gsap.utils.clamp(0, 1);
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  gsap.set(shell, {
+    transformPerspective: 1400,
+    transformOrigin: "center center",
+    scale: 1,
+    z: 0,
+  });
+
+  gsap.set([shell, scene, content, scrollCue].filter(Boolean), {
+    willChange: "transform, opacity, filter",
+  });
+
+  const shouldDelayHeader = header && !isMobile;
+
+  if (shouldDelayHeader) {
+    gsap.set(header, { autoAlpha: 0, y: -18 });
+  }
+
+  const updateHeader = (progress) => {
+    if (!shouldDelayHeader) return;
+
+    const visibility = clamp01((progress - 0.62) / 0.24);
+    gsap.set(header, {
+      autoAlpha: visibility,
+      y: gsap.utils.interpolate(-18, 0, visibility),
+    });
+  };
+
+  const updateGatewayState = (progress) => {
+    updateHeader(progress);
+    if (scrollCue) {
+      scrollCue.style.pointerEvents = progress > 0.72 ? "none" : "auto";
+    }
+  };
+
+  const timeline = gsap.timeline({
+    scrollTrigger: {
+      trigger: gateway,
+      start: "top top",
+      end: isMobile ? "bottom top" : "+=130%",
+      scrub: isMobile ? 0.35 : 1,
+      pin: !isMobile,
+      pinSpacing: isMobile ? true : false,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => updateGatewayState(self.progress),
+      onLeave: () => updateGatewayState(1),
+      onEnterBack: (self) => updateGatewayState(self.progress),
+      onRefresh: (self) => updateGatewayState(self.progress),
+    },
+  });
+
+  timeline
+    .to(
+      shell,
+      {
+        scale: isMobile ? 1.08 : 1.28,
+        z: isMobile ? -40 : -220,
+        rotateX: isMobile ? 0 : 4,
+        opacity: 0,
+        filter: isMobile ? "blur(3px)" : "blur(8px)",
+        ease: "none",
+      },
+      0
+    )
+    .to(
+      scene,
+      {
+        yPercent: isMobile ? -4 : -10,
+        rotateX: isMobile ? 0 : -3,
+        ease: "none",
+      },
+      0
+    )
+    .to(
+      content,
+      {
+        y: isMobile ? -18 : -42,
+        opacity: isMobile ? 0.2 : 0.03,
+        ease: "none",
+      },
+      0.08
+    );
+
+  if (scrollCue) {
+    timeline.to(scrollCue, { opacity: 0, y: isMobile ? -10 : -18, ease: "none" }, 0.05);
+  }
+
+  if (nodes.length) {
+    timeline.to(nodes, { opacity: 0.12, stagger: 0.01, ease: "none" }, 0.18);
+  }
+
+  requestAnimationFrame(() => ScrollTrigger.refresh());
+}
 
 function setupCursor() {
   if (reducedMotion() || window.matchMedia("(pointer: coarse)").matches) return;
@@ -493,12 +603,23 @@ function setupAnimations() {
       );
   }
 
-  gsap.from(".site-header", {
-    y: -24,
-    opacity: 0,
-    duration: 0.9,
-    ease: "power3.out",
-  });
+  const gatewayDelaysHeader =
+    document.querySelector("#gateway") &&
+    !window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
+
+  if (gatewayDelaysHeader) {
+    gsap.set(".site-header", {
+      y: -18,
+      autoAlpha: 0,
+    });
+  } else {
+    gsap.from(".site-header", {
+      y: -24,
+      opacity: 0,
+      duration: 0.9,
+      ease: "power3.out",
+    });
+  }
 
   gsap.utils.toArray(".dev-chip").forEach((chip, index) => {
     gsap.to(chip, {
@@ -2391,6 +2512,7 @@ setupCursor();
 setupDeveloperScene();
 setupFlyingAccents();
 setupAnimations();
+setupGatewayIntro();
 setupProjectsEntrance();
 setupSystemFlow();
 setupAchievementsSection();
