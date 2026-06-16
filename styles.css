@@ -2219,14 +2219,17 @@ pre {
   background: linear-gradient(90deg, var(--electric), rgba(255, 255, 255, 0.08));
 }
 .flow-steps {
+  --flow-card-offset: 56px;
+  --flow-marker-radius: 8px;
   --flow-marker-top: 34px;
+  --flow-rail-left: 31px;
   --flow-track-end: 34px;
   --flow-track-start: 34px;
   position: relative;
   display: grid;
   gap: 12px;
   margin: 0;
-  padding: 18px;
+  padding: 18px 18px 18px var(--flow-card-offset);
   border: 1px solid rgba(255, 255, 255, 0.11);
   border-radius: 28px;
   background:
@@ -2235,6 +2238,7 @@ pre {
   box-shadow: var(--shadow);
   list-style: none;
   backdrop-filter: blur(12px);
+  overflow: visible;
 }
 .flow-steps > li {
   min-width: 0;
@@ -2244,7 +2248,7 @@ pre {
   position: absolute;
   top: var(--flow-track-start);
   bottom: var(--flow-track-end);
-  left: 31px;
+  left: var(--flow-rail-left);
   z-index: 0;
   width: 2px;
   content: "";
@@ -2270,7 +2274,7 @@ pre {
   gap: 16px;
   width: 100%;
   min-height: 106px;
-  padding: 18px 18px 18px 46px;
+  padding: 18px;
   color: var(--text);
   font: inherit;
   text-align: left;
@@ -2283,6 +2287,7 @@ pre {
     rgba(255, 255, 255, 0.04);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
   isolation: isolate;
+  overflow: visible;
   transform-style: preserve-3d;
   transition:
     border-color 0.24s,
@@ -2293,7 +2298,10 @@ pre {
 .flow-step::before {
   position: absolute;
   top: var(--flow-marker-top);
-  left: 7px;
+  left: calc(
+    var(--flow-rail-left) - var(--flow-card-offset) -
+      var(--flow-marker-radius)
+  );
   z-index: 2;
   width: 12px;
   height: 12px;
@@ -4184,7 +4192,7 @@ pre {
     min-height: 460px;
   }
   .flow-steps {
-    padding: 18px;
+    padding: 18px 18px 18px var(--flow-card-offset);
   }
   .flow-step {
     min-height: 0;
@@ -4751,7 +4759,7 @@ pre {
   .flow-step {
     grid-template-columns: 42px minmax(0, 1fr);
     min-height: 0;
-    padding: 16px 16px 16px 42px;
+    padding: 16px;
   }
   .flow-step-index {
     width: 42px;
