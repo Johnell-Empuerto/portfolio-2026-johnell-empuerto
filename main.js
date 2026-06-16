@@ -43,6 +43,7 @@ function setupSectionOrder() {
     document.querySelector("#hero"),
     document.querySelector(".marquee-section"),
     document.querySelector("#projects"),
+    document.querySelector("#system-flow"),
     document.querySelector("#experience"),
     document.querySelector("#skills"),
     document.querySelector(".skills-section"),
@@ -50,7 +51,7 @@ function setupSectionOrder() {
     document.querySelector("#story"),
     document.querySelector("#achievements"),
     document.querySelector("#education"),
-    document.querySelector(".references-section"),
+    document.querySelector(".capabilities-section"),
     document.querySelector("#contact"),
   ]
     .filter(Boolean)
@@ -691,6 +692,318 @@ function setupProjectsEntrance() {
   });
 
   requestAnimationFrame(() => ScrollTrigger.refresh());
+}
+
+function setupSystemFlow() {
+  const section = document.querySelector("[data-system-flow-section]");
+  if (!section) return;
+
+  const steps = Array.from(section.querySelectorAll("[data-flow-step]"));
+  const nodes = Array.from(section.querySelectorAll("[data-flow-node]"));
+  const nodeCores = nodes.map((node) => node.querySelector(".flow-node-core")).filter(Boolean);
+  const rail = section.querySelector(".flow-steps");
+  const dashboard = section.querySelector(".flow-dashboard");
+  const activeTitle = section.querySelector("[data-flow-active-title]");
+  const visual = section.querySelector(".system-flow-visual");
+  const scene = section.querySelector(".flow-scene");
+  const orbits = Array.from(section.querySelectorAll(".flow-orbit"));
+  const titles = steps.map((step) => step.querySelector("h3")?.textContent.trim() || "");
+  const maxIndex = steps.length - 1;
+  let currentIndex = -1;
+
+  if (!steps.length || !dashboard || !visual || !scene) return;
+
+  const clampIndex = (index) => Math.max(0, Math.min(maxIndex, index));
+
+  const readPixelValue = (value) => Number.parseFloat(value || "0") || 0;
+
+  const updateFlowProgress = (index) => {
+    const step = steps[clampIndex(index)];
+    if (!rail || !step) return;
+
+    const railRect = rail.getBoundingClientRect();
+    const stepRect = step.getBoundingClientRect();
+    const railStyle = window.getComputedStyle(rail);
+    const trackTop = readPixelValue(railStyle.getPropertyValue("--flow-track-start"));
+    const trackBottom = readPixelValue(railStyle.getPropertyValue("--flow-track-end"));
+    const markerTop = readPixelValue(railStyle.getPropertyValue("--flow-marker-top")) || stepRect.height / 2;
+    const markerY = stepRect.top - railRect.top + markerTop;
+    const trackHeight = Math.max(0, railRect.height - trackTop - trackBottom);
+    const progress = Math.max(0, Math.min(trackHeight, markerY - trackTop));
+
+    section.style.setProperty("--flow-progress", `${progress}px`);
+  };
+
+  const setActiveStep = (index, { syncProgress = true, forceProgress = false } = {}) => {
+    const activeIndex = clampIndex(index);
+    if (activeIndex === currentIndex) {
+      if (syncProgress && forceProgress) updateFlowProgress(activeIndex);
+      return;
+    }
+
+    currentIndex = activeIndex;
+
+    if (syncProgress) {
+      updateFlowProgress(activeIndex);
+    }
+
+    steps.forEach((step, stepIndex) => {
+      const isActive = stepIndex === activeIndex;
+      step.classList.toggle("is-active", isActive);
+
+      if (isActive) {
+        step.setAttribute("aria-current", "step");
+      } else {
+        step.removeAttribute("aria-current");
+      }
+    });
+
+    nodes.forEach((node) => {
+      const nodeStep = Number(node.dataset.flowNode || 0);
+      node.classList.toggle("is-active", nodeStep === activeIndex);
+      node.classList.toggle("is-past", nodeStep < activeIndex);
+    });
+
+    if (activeTitle) {
+      activeTitle.textContent = titles[activeIndex] || "";
+    }
+  };
+
+  setActiveStep(0);
+
+  if (rail && window.ResizeObserver) {
+    const progressObserver = new ResizeObserver(() => {
+      updateFlowProgress(currentIndex < 0 ? 0 : currentIndex);
+    });
+    progressObserver.observe(rail);
+    section.flowProgressObserver = progressObserver;
+  }
+
+  steps.forEach((step, index) => {
+    step.addEventListener("pointerenter", () => setActiveStep(index));
+    step.addEventListener("focus", () => setActiveStep(index));
+    step.addEventListener("click", () => setActiveStep(index));
+  });
+
+  if (!window.gsap || !window.ScrollTrigger || reducedMotion()) {
+    section.classList.add("is-flow-ready");
+    steps.forEach((step) => {
+      step.style.opacity = "1";
+      step.style.transform = "none";
+    });
+    nodeCores.forEach((node) => {
+      node.style.opacity = "1";
+      node.style.transform = "none";
+    });
+    return;
+  }
+
+  const mm = gsap.matchMedia();
+
+  mm.add("(min-width: 981px)", () => {
+    section.classList.add("is-flow-desktop", "is-flow-ready");
+
+    gsap.set(visual, { y: 42, rotateX: 6, transformOrigin: "center bottom" });
+    gsap.set(steps, { autoAlpha: 0 });
+    gsap.set(nodeCores, {
+      scale: 0.62,
+      z: -120,
+      rotateY: -24,
+      transformOrigin: "center center",
+    });
+    gsap.set(dashboard, {
+      y: 34,
+      z: 0,
+      rotateX: 12,
+      rotateY: -14,
+      scale: 0.94,
+      transformOrigin: "center center",
+    });
+
+    const intro = gsap.timeline({ paused: true });
+
+    intro
+      .to(visual, {
+        autoAlpha: 1,
+        y: 0,
+        rotateX: 0,
+        duration: 0.85,
+        ease: "power3.out",
+      })
+      .to(
+        dashboard,
+        {
+          autoAlpha: 1,
+          y: 0,
+          rotateX: 0,
+          rotateY: -8,
+          scale: 1,
+          duration: 0.85,
+          ease: "power3.out",
+        },
+        "-=0.55"
+      )
+      .to(
+        nodeCores,
+        {
+          autoAlpha: 1,
+          scale: 1,
+          z: 0,
+          rotateY: 0,
+          duration: 0.56,
+          stagger: 0.045,
+          ease: "back.out(1.7)",
+        },
+        "-=0.45"
+      )
+      .to(
+        steps,
+        {
+          autoAlpha: 1,
+          duration: 0.5,
+          stagger: 0.045,
+          ease: "power2.out",
+        },
+        "-=0.4"
+      );
+
+    ScrollTrigger.create({
+      trigger: section,
+      start: "top 72%",
+      onEnter: () => intro.play(),
+      onEnterBack: () => intro.play(),
+      onLeaveBack: () => intro.reverse(),
+      onRefresh: (self) => {
+        if (self.isActive || self.progress > 0) {
+          intro.progress(1);
+        }
+      },
+    });
+
+    ScrollTrigger.create({
+      trigger: section,
+      start: "top 64%",
+      end: "bottom 42%",
+      scrub: 0.4,
+      onUpdate: (self) => {
+        setActiveStep(Math.round(self.progress * maxIndex));
+      },
+      onLeave: () => {
+        setActiveStep(maxIndex);
+      },
+      onLeaveBack: () => {
+        setActiveStep(0);
+      },
+    });
+
+    const depth = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: 0.75,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    depth
+      .to(
+        dashboard,
+        {
+          y: -18,
+          rotateX: -5,
+          rotateY: 7,
+          scale: 1.025,
+          ease: "none",
+          duration: 1,
+        },
+        0
+      )
+      .to(
+        scene,
+        {
+          rotateZ: 2.5,
+          ease: "none",
+          duration: 1,
+        },
+        0
+      )
+      .to(
+        orbits,
+        {
+          rotateZ: (index) => (index === 0 ? 36 : -28),
+          ease: "none",
+          duration: 1,
+        },
+        0
+      )
+      .to(
+        nodeCores,
+        {
+          y: (index) => (index % 2 === 0 ? -10 : 10),
+          rotateX: (index) => (index % 2 === 0 ? 8 : -8),
+          ease: "none",
+          duration: 1,
+        },
+        0
+      );
+
+    requestAnimationFrame(() => {
+      ScrollTrigger.refresh();
+
+      if (window.location.hash === "#system-flow") {
+        window.scrollTo(0, section.offsetTop - 90);
+        setActiveStep(0, { forceProgress: true });
+      }
+    });
+
+    return () => {
+      section.classList.remove("is-flow-desktop");
+      gsap.set([visual, dashboard, scene, ...orbits, ...nodeCores, ...steps], {
+        clearProps: "all",
+      });
+      setActiveStep(0);
+    };
+  });
+
+  mm.add("(max-width: 980px)", () => {
+    section.classList.add("is-flow-ready");
+    setActiveStep(0);
+
+    gsap.set(visual, { y: 28 });
+    gsap.set(steps, { autoAlpha: 0 });
+
+    const mobileTimeline = gsap.timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top 78%",
+        toggleActions: "play none none reverse",
+      },
+    });
+
+    mobileTimeline
+      .to(visual, {
+        autoAlpha: 1,
+        y: 0,
+        duration: 0.62,
+        ease: "power3.out",
+      })
+      .to(
+        steps,
+        {
+          autoAlpha: 1,
+          duration: 0.46,
+          stagger: 0.06,
+          ease: "power2.out",
+        },
+        "-=0.3"
+      );
+
+    return () => {
+      gsap.set([visual, ...steps], { clearProps: "all" });
+      setActiveStep(0);
+    };
+  });
 }
 
 function setupAchievementsSection() {
@@ -1781,7 +2094,7 @@ function setupCardSpotlights() {
   if (window.matchMedia("(pointer: coarse)").matches) return;
 
   const cards = document.querySelectorAll(
-    ".project-card, .experience-card, .contact-card, .hero-metrics div"
+    ".project-card, .experience-card, .capability-card, .contact-card, .hero-metrics div"
   );
   const canTilt = window.matchMedia("(pointer: fine)").matches && !reducedMotion() && window.gsap;
 
@@ -2079,6 +2392,7 @@ setupDeveloperScene();
 setupFlyingAccents();
 setupAnimations();
 setupProjectsEntrance();
+setupSystemFlow();
 setupAchievementsSection();
 setupStackStoryboard();
 setupExperienceJourney();
