@@ -1,4 +1,6 @@
-const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const prefersReducedMotion = window.matchMedia(
+  "(prefers-reduced-motion: reduce)",
+).matches;
 const reducedMotion = () => prefersReducedMotion;
 const isChromeTouchBrowser = () => {
   const ua = navigator.userAgent;
@@ -50,6 +52,7 @@ function setupSectionOrder() {
     document.querySelector(".skills-section"),
     document.querySelector("#about"),
     document.querySelector("#story"),
+    document.querySelector("#my-world"),
     document.querySelector("#achievements"),
     document.querySelector("#education"),
     document.querySelector(".capabilities-section"),
@@ -63,15 +66,37 @@ setupSectionOrder();
 
 function setupGatewayIntro() {
   const gateway = document.querySelector("#gateway");
-  if (!gateway || !window.gsap || !window.ScrollTrigger || reducedMotion()) return;
+  if (!gateway) return;
+
+  const isMobile = window.matchMedia(
+    "(max-width: 767px), (pointer: coarse)",
+  ).matches;
+  const header = document.querySelector(".site-header");
+
+  if (isMobile) {
+    document.documentElement.classList.remove("has-gateway-intro");
+
+    if (header) {
+      if (window.gsap) {
+        gsap.set(header, { autoAlpha: 1, y: 0, clearProps: "visibility" });
+      } else {
+        header.style.opacity = "1";
+        header.style.visibility = "visible";
+        header.style.transform = "";
+      }
+    }
+
+    gateway.style.display = "none";
+    return;
+  }
+
+  if (!window.gsap || !window.ScrollTrigger || reducedMotion()) return;
 
   const shell = gateway.querySelector(".gateway-shell");
   const scene = gateway.querySelector(".gateway-scene");
   const content = gateway.querySelector(".gateway-content");
   const scrollCue = gateway.querySelector(".gateway-scroll");
   const nodes = gsap.utils.toArray(gateway.querySelectorAll(".gateway-node"));
-  const header = document.querySelector(".site-header");
-  const isMobile = window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
   const clamp01 = gsap.utils.clamp(0, 1);
 
   gsap.registerPlugin(ScrollTrigger);
@@ -114,15 +139,63 @@ function setupGatewayIntro() {
     scrollTrigger: {
       trigger: gateway,
       start: "top top",
-      end: isMobile ? "bottom top" : "+=130%",
+      end: isMobile ? "bottom top" : "+=100%",
       scrub: isMobile ? 0.35 : 1,
       pin: !isMobile,
-      pinSpacing: isMobile ? true : false,
+      pinSpacing: true,
       anticipatePin: 1,
       invalidateOnRefresh: true,
-      onUpdate: (self) => updateGatewayState(self.progress),
-      onLeave: () => updateGatewayState(1),
-      onEnterBack: (self) => updateGatewayState(self.progress),
+      onUpdate: (self) => {
+        updateGatewayState(self.progress);
+
+        if (self.progress < 0.62) {
+          document.documentElement.classList.add("has-gateway-intro");
+        } else {
+          document.documentElement.classList.remove("has-gateway-intro");
+        }
+      },
+      onLeave: () => {
+        updateGatewayState(1);
+        document.documentElement.classList.remove("has-gateway-intro");
+      },
+      onEnterBack: (self) => {
+        document.documentElement.classList.add("has-gateway-intro");
+        updateGatewayState(self.progress);
+      },
+      onLeaveBack: () => {
+        document.documentElement.classList.add("has-gateway-intro");
+        updateGatewayState(0);
+
+        gsap.set(shell, {
+          scale: 1,
+          z: 0,
+          rotateX: 0,
+          opacity: 1,
+          filter: "blur(0px)",
+        });
+
+        gsap.set(scene, {
+          yPercent: 0,
+          rotateX: 0,
+        });
+
+        gsap.set(content, {
+          y: 0,
+          opacity: 1,
+        });
+
+        if (scrollCue) {
+          gsap.set(scrollCue, {
+            opacity: 1,
+            y: 0,
+            pointerEvents: "auto",
+          });
+        }
+
+        if (nodes.length) {
+          gsap.set(nodes, { opacity: 1 });
+        }
+      },
       onRefresh: (self) => updateGatewayState(self.progress),
     },
   });
@@ -138,7 +211,7 @@ function setupGatewayIntro() {
         filter: isMobile ? "blur(3px)" : "blur(8px)",
         ease: "none",
       },
-      0
+      0,
     )
     .to(
       scene,
@@ -147,7 +220,7 @@ function setupGatewayIntro() {
         rotateX: isMobile ? 0 : -3,
         ease: "none",
       },
-      0
+      0,
     )
     .to(
       content,
@@ -156,11 +229,15 @@ function setupGatewayIntro() {
         opacity: isMobile ? 0.2 : 0.03,
         ease: "none",
       },
-      0.08
+      0.08,
     );
 
   if (scrollCue) {
-    timeline.to(scrollCue, { opacity: 0, y: isMobile ? -10 : -18, ease: "none" }, 0.05);
+    timeline.to(
+      scrollCue,
+      { opacity: 0, y: isMobile ? -10 : -18, ease: "none" },
+      0.05,
+    );
   }
 
   if (nodes.length) {
@@ -195,8 +272,12 @@ function setupCursor() {
   animateCursor();
 
   document.querySelectorAll("a, button").forEach((link) => {
-    link.addEventListener("mouseenter", () => cursor.classList.add("is-active"));
-    link.addEventListener("mouseleave", () => cursor.classList.remove("is-active"));
+    link.addEventListener("mouseenter", () =>
+      cursor.classList.add("is-active"),
+    );
+    link.addEventListener("mouseleave", () =>
+      cursor.classList.remove("is-active"),
+    );
   });
 }
 
@@ -206,7 +287,9 @@ function setupDeveloperScene() {
 
   const card = document.querySelector(".orb-card");
   const hero = document.querySelector("#hero");
-  const mobileScene = window.matchMedia("(max-width: 640px), (pointer: coarse)").matches;
+  const mobileScene = window.matchMedia(
+    "(max-width: 640px), (pointer: coarse)",
+  ).matches;
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
   camera.position.z = 5.2;
@@ -245,11 +328,18 @@ function setupDeveloperScene() {
     colors[i * 3] = color.r;
     colors[i * 3 + 1] = color.g;
     colors[i * 3 + 2] = color.b;
-    nodes.push({ x: positions[i * 3], y: positions[i * 3 + 1], z: positions[i * 3 + 2] });
+    nodes.push({
+      x: positions[i * 3],
+      y: positions[i * 3 + 1],
+      z: positions[i * 3 + 2],
+    });
   }
 
   const nodeGeometry = new THREE.BufferGeometry();
-  nodeGeometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+  nodeGeometry.setAttribute(
+    "position",
+    new THREE.BufferAttribute(positions, 3),
+  );
   nodeGeometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 
   const nodeMaterial = new THREE.PointsMaterial({
@@ -272,13 +362,23 @@ function setupDeveloperScene() {
       const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
       if (distance < (mobileScene ? 1.05 : 1.25)) {
-        links.push(nodes[i].x, nodes[i].y, nodes[i].z, nodes[j].x, nodes[j].y, nodes[j].z);
+        links.push(
+          nodes[i].x,
+          nodes[i].y,
+          nodes[i].z,
+          nodes[j].x,
+          nodes[j].y,
+          nodes[j].z,
+        );
       }
     }
   }
 
   const linkGeometry = new THREE.BufferGeometry();
-  linkGeometry.setAttribute("position", new THREE.Float32BufferAttribute(links, 3));
+  linkGeometry.setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(links, 3),
+  );
 
   const linkMaterial = new THREE.LineBasicMaterial({
     color: 0x67e8f9,
@@ -354,7 +454,8 @@ function setupDeveloperScene() {
       return;
     }
 
-    const shouldRender = !lastFrameTime || timestamp - lastFrameTime >= frameDelay;
+    const shouldRender =
+      !lastFrameTime || timestamp - lastFrameTime >= frameDelay;
 
     if (!shouldRender) {
       animationFrame = requestAnimationFrame(renderFrame);
@@ -403,7 +504,8 @@ function setupDeveloperScene() {
   }
 
   function handleResize() {
-    const rect = card?.getBoundingClientRect() || canvas.getBoundingClientRect();
+    const rect =
+      card?.getBoundingClientRect() || canvas.getBoundingClientRect();
     const width = Math.max(1, rect.width);
     const height = Math.max(1, rect.height);
 
@@ -429,7 +531,7 @@ function setupDeveloperScene() {
       {
         threshold: [0, 0.08, 0.2],
         rootMargin: "80px 0px 80px 0px",
-      }
+      },
     );
 
     observer.observe(hero || card || canvas);
@@ -491,6 +593,131 @@ function setupDeveloperScene() {
   window.addEventListener("beforeunload", destroyScene, { once: true });
 }
 
+function setupMyWorldGallery() {
+  const gallery = document.querySelector("#my-world-gallery");
+  if (!gallery) return;
+
+  const images = [
+    {
+      src: "./images/MyWorld/myworld1.jpg",
+      alt: "Personal moment from Johnell's world",
+      width: 3072,
+      height: 4096,
+    },
+    {
+      src: "./images/MyWorld/myworld9.png",
+      alt: "Food and lifestyle photo",
+      width: 1914,
+      height: 868,
+    },
+    {
+      src: "./images/MyWorld/myworld2.jpg",
+      alt: "Travel and lifestyle photo",
+      width: 2448,
+      height: 3264,
+    },
+    {
+      src: "./images/MyWorld/myworld14.jpg",
+      alt: "Food and lifestyle photo",
+      width: 2048,
+      height: 1535,
+    },
+    {
+      src: "./images/MyWorld/myworld3.jpeg",
+      alt: "Food and lifestyle photo",
+      width: 2976,
+      height: 3968,
+    },
+    {
+      src: "./images/MyWorld/myworld4.jpeg",
+      alt: "Nature and outdoor photo",
+      width: 2976,
+      height: 3968,
+    },
+    {
+      src: "./images/MyWorld/myworld15.jpg",
+      alt: "Everyday scene from Johnell's world",
+      width: 2048,
+      height: 1542,
+    },
+    {
+      src: "./images/MyWorld/myworld5.jpg",
+      alt: "Everyday scene from Johnell's world",
+      width: 4896,
+      height: 6528,
+    },
+    {
+      src: "./images/MyWorld/myworld10.jpeg",
+      alt: "Everyday scene from Johnell's world",
+      width: 1355,
+      height: 1806,
+    },
+    {
+      src: "./images/MyWorld/myworld6.jpg",
+      alt: "Personal moment from Johnell's world",
+      width: 3072,
+      height: 4096,
+    },
+    {
+      src: "./images/MyWorld/myworld7.jpg",
+      alt: "Travel and lifestyle photo",
+      width: 1143,
+      height: 1524,
+    },
+    {
+      src: "./images/MyWorld/myworld8.jpg",
+      alt: "Nature and outdoor photo",
+      width: 2976,
+      height: 3968,
+    },
+    {
+      src: "./images/MyWorld/myworld11.jpg",
+      alt: "Personal moment from Johnell's world",
+      width: 3072,
+      height: 4080,
+    },
+    {
+      src: "./images/MyWorld/myworld12.jpg",
+      alt: "Travel and lifestyle photo",
+      width: 2976,
+      height: 3968,
+    },
+    {
+      src: "./images/MyWorld/myworld13.jpg",
+      alt: "Nature and outdoor photo",
+      width: 4896,
+      height: 6528,
+    },
+  ];
+
+  gallery.innerHTML = images
+    .map(
+      (image) => `
+        <figure class="my-world-card reveal">
+        <img
+          src="${image.src}"
+          alt="${image.alt}"
+          width="${image.width}"
+          height="${image.height}"
+          loading="lazy"
+          decoding="async"
+        />
+        </figure>
+      `,
+    )
+    .join("");
+
+  gallery.querySelectorAll("img").forEach((image) => {
+    image.addEventListener(
+      "load",
+      () => {
+        if (window.ScrollTrigger) ScrollTrigger.refresh();
+      },
+      { once: true },
+    );
+  });
+}
+
 function setupAnimations() {
   if (!window.gsap || !window.ScrollTrigger || reducedMotion()) {
     document.querySelectorAll(".reveal").forEach((element) => {
@@ -518,21 +745,23 @@ function setupAnimations() {
     },
   });
 
-  gsap.utils.toArray(
-    ".reveal:not(.skill-card):not(.experience-orbit):not(.experience-tabs):not(.projects-kicker):not(.project-card):not(.achievements-kicker):not(.achievements-tabs)"
-  ).forEach((element) => {
-    gsap.to(element, {
-      opacity: 1,
-      y: 0,
-      duration: 1,
-      ease: "power3.out",
-      scrollTrigger: {
-        trigger: element,
-        start: "top 86%",
-        toggleActions: "play none none reverse",
-      },
+  gsap.utils
+    .toArray(
+      ".reveal:not(.skill-card):not(.experience-orbit):not(.experience-tabs):not(.projects-kicker):not(.project-card):not(.achievements-kicker):not(.achievements-tabs):not(.my-world-card)",
+    )
+    .forEach((element) => {
+      gsap.to(element, {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: element,
+          start: "top 86%",
+          toggleActions: "play none none reverse",
+        },
+      });
     });
-  });
 
   const heroTitle = document.querySelector(".hero-title");
   const heroTitleLines = gsap.utils.toArray(".hero-title .line");
@@ -540,7 +769,11 @@ function setupAnimations() {
   if (heroTitle && heroTitleLines.length) {
     gsap
       .timeline({ delay: 0.18 })
-      .set(heroTitle, { "--shine-x": "-145%", "--shine-opacity": 0, "--title-glow": 0.38 })
+      .set(heroTitle, {
+        "--shine-x": "-145%",
+        "--shine-opacity": 0,
+        "--title-glow": 0.38,
+      })
       .from(heroTitleLines, {
         yPercent: 118,
         opacity: 0,
@@ -558,7 +791,7 @@ function setupAnimations() {
           duration: 0.16,
           ease: "power2.out",
         },
-        "-=0.58"
+        "-=0.58",
       )
       .to(
         heroTitle,
@@ -568,7 +801,7 @@ function setupAnimations() {
           duration: 1.12,
           ease: "power2.inOut",
         },
-        "<"
+        "<",
       )
       .to(
         heroTitle,
@@ -577,7 +810,7 @@ function setupAnimations() {
           duration: 0.28,
           ease: "power2.out",
         },
-        "-=0.1"
+        "-=0.1",
       )
       .to(
         heroTitleLines,
@@ -588,7 +821,7 @@ function setupAnimations() {
           yoyo: true,
           ease: "sine.inOut",
         },
-        "-=0.4"
+        "-=0.4",
       )
       .to(
         heroTitle,
@@ -599,7 +832,7 @@ function setupAnimations() {
           yoyo: true,
           ease: "sine.inOut",
         },
-        "<"
+        "<",
       );
   }
 
@@ -682,6 +915,58 @@ function setupAnimations() {
   });
 }
 
+function setupMyWorldGalleryMotion() {
+  const section = document.querySelector("#my-world");
+  if (!section) return;
+
+  const cards = Array.from(section.querySelectorAll(".my-world-card"));
+  if (!cards.length) return;
+
+  const simpleMotion = window.matchMedia(
+    "(max-width: 640px), (pointer: coarse)",
+  ).matches;
+
+  if (
+    !window.gsap ||
+    !window.ScrollTrigger ||
+    reducedMotion() ||
+    simpleMotion
+  ) {
+    cards.forEach((card) => {
+      card.style.opacity = "1";
+      card.style.transform = "none";
+      card.style.filter = "none";
+    });
+    return;
+  }
+
+  gsap.set(cards, {
+    autoAlpha: 0,
+    y: 46,
+    scale: 0.985,
+    filter: "blur(10px)",
+    transformOrigin: "center bottom",
+  });
+
+  gsap
+    .timeline({
+      scrollTrigger: {
+        trigger: section,
+        start: "top 74%",
+        toggleActions: "play none none reverse",
+      },
+    })
+    .to(cards, {
+      autoAlpha: 1,
+      y: 0,
+      scale: 1,
+      filter: "blur(0px)",
+      duration: 0.78,
+      stagger: 0.055,
+      ease: "power3.out",
+    });
+}
+
 function setupProjectsEntrance() {
   const section = document.querySelector("[data-projects-section]");
   if (!section) return;
@@ -703,9 +988,15 @@ function setupProjectsEntrance() {
     return;
   }
 
-  const visuals = cards.map((card) => card.querySelector(".project-visual")).filter(Boolean);
-  const numbers = cards.map((card) => card.querySelector(".project-visual span")).filter(Boolean);
-  const infoBlocks = cards.flatMap((card) => Array.from(card.querySelectorAll(".project-info > *")));
+  const visuals = cards
+    .map((card) => card.querySelector(".project-visual"))
+    .filter(Boolean);
+  const numbers = cards
+    .map((card) => card.querySelector(".project-visual span"))
+    .filter(Boolean);
+  const infoBlocks = cards.flatMap((card) =>
+    Array.from(card.querySelectorAll(".project-info > *")),
+  );
 
   gsap.set(kicker, {
     autoAlpha: 0,
@@ -762,7 +1053,7 @@ function setupProjectsEntrance() {
         stagger: 0.12,
         ease: "power3.out",
       },
-      "-=0.28"
+      "-=0.28",
     )
     .to(
       visuals,
@@ -773,7 +1064,7 @@ function setupProjectsEntrance() {
         stagger: 0.12,
         ease: "power3.out",
       },
-      "<"
+      "<",
     )
     .to(
       numbers,
@@ -785,7 +1076,7 @@ function setupProjectsEntrance() {
         stagger: 0.08,
         ease: "back.out(1.8)",
       },
-      "-=0.52"
+      "-=0.52",
     )
     .to(
       infoBlocks,
@@ -796,7 +1087,7 @@ function setupProjectsEntrance() {
         stagger: 0.025,
         ease: "power2.out",
       },
-      "-=0.62"
+      "-=0.62",
     );
 
   ScrollTrigger.create({
@@ -821,14 +1112,18 @@ function setupSystemFlow() {
 
   const steps = Array.from(section.querySelectorAll("[data-flow-step]"));
   const nodes = Array.from(section.querySelectorAll("[data-flow-node]"));
-  const nodeCores = nodes.map((node) => node.querySelector(".flow-node-core")).filter(Boolean);
+  const nodeCores = nodes
+    .map((node) => node.querySelector(".flow-node-core"))
+    .filter(Boolean);
   const rail = section.querySelector(".flow-steps");
   const dashboard = section.querySelector(".flow-dashboard");
   const activeTitle = section.querySelector("[data-flow-active-title]");
   const visual = section.querySelector(".system-flow-visual");
   const scene = section.querySelector(".flow-scene");
   const orbits = Array.from(section.querySelectorAll(".flow-orbit"));
-  const titles = steps.map((step) => step.querySelector("h3")?.textContent.trim() || "");
+  const titles = steps.map(
+    (step) => step.querySelector("h3")?.textContent.trim() || "",
+  );
   const maxIndex = steps.length - 1;
   let currentIndex = -1;
 
@@ -845,9 +1140,15 @@ function setupSystemFlow() {
     const railRect = rail.getBoundingClientRect();
     const stepRect = step.getBoundingClientRect();
     const railStyle = window.getComputedStyle(rail);
-    const trackTop = readPixelValue(railStyle.getPropertyValue("--flow-track-start"));
-    const trackBottom = readPixelValue(railStyle.getPropertyValue("--flow-track-end"));
-    const markerTop = readPixelValue(railStyle.getPropertyValue("--flow-marker-top")) || stepRect.height / 2;
+    const trackTop = readPixelValue(
+      railStyle.getPropertyValue("--flow-track-start"),
+    );
+    const trackBottom = readPixelValue(
+      railStyle.getPropertyValue("--flow-track-end"),
+    );
+    const markerTop =
+      readPixelValue(railStyle.getPropertyValue("--flow-marker-top")) ||
+      stepRect.height / 2;
     const markerY = stepRect.top - railRect.top + markerTop;
     const trackHeight = Math.max(0, railRect.height - trackTop - trackBottom);
     const progress = Math.max(0, Math.min(trackHeight, markerY - trackTop));
@@ -855,7 +1156,10 @@ function setupSystemFlow() {
     section.style.setProperty("--flow-progress", `${progress}px`);
   };
 
-  const setActiveStep = (index, { syncProgress = true, forceProgress = false } = {}) => {
+  const setActiveStep = (
+    index,
+    { syncProgress = true, forceProgress = false } = {},
+  ) => {
     const activeIndex = clampIndex(index);
     if (activeIndex === currentIndex) {
       if (syncProgress && forceProgress) updateFlowProgress(activeIndex);
@@ -962,7 +1266,7 @@ function setupSystemFlow() {
           duration: 0.85,
           ease: "power3.out",
         },
-        "-=0.55"
+        "-=0.55",
       )
       .to(
         nodeCores,
@@ -975,7 +1279,7 @@ function setupSystemFlow() {
           stagger: 0.045,
           ease: "back.out(1.7)",
         },
-        "-=0.45"
+        "-=0.45",
       )
       .to(
         steps,
@@ -985,7 +1289,7 @@ function setupSystemFlow() {
           stagger: 0.045,
           ease: "power2.out",
         },
-        "-=0.4"
+        "-=0.4",
       );
 
     ScrollTrigger.create({
@@ -1038,7 +1342,7 @@ function setupSystemFlow() {
           ease: "none",
           duration: 1,
         },
-        0
+        0,
       )
       .to(
         scene,
@@ -1047,7 +1351,7 @@ function setupSystemFlow() {
           ease: "none",
           duration: 1,
         },
-        0
+        0,
       )
       .to(
         orbits,
@@ -1056,7 +1360,7 @@ function setupSystemFlow() {
           ease: "none",
           duration: 1,
         },
-        0
+        0,
       )
       .to(
         nodeCores,
@@ -1066,7 +1370,7 @@ function setupSystemFlow() {
           ease: "none",
           duration: 1,
         },
-        0
+        0,
       );
 
     requestAnimationFrame(() => {
@@ -1117,7 +1421,7 @@ function setupSystemFlow() {
           stagger: 0.06,
           ease: "power2.out",
         },
-        "-=0.3"
+        "-=0.3",
       );
 
     return () => {
@@ -1137,7 +1441,9 @@ function setupAchievementsSection() {
   const cards = Array.from(section.querySelectorAll("[data-achievement-card]"));
   const media = Array.from(section.querySelectorAll(".achievement-media"));
   const images = Array.from(section.querySelectorAll(".achievement-media img"));
-  const content = cards.flatMap((card) => Array.from(card.querySelectorAll(".achievement-content > *")));
+  const content = cards.flatMap((card) =>
+    Array.from(card.querySelectorAll(".achievement-content > *")),
+  );
 
   if (!cards.length) return;
 
@@ -1262,7 +1568,7 @@ function setupAchievementsSection() {
         stagger: 0.08,
         ease: "back.out(1.55)",
       },
-      "-=0.36"
+      "-=0.36",
     )
     .to(
       cards,
@@ -1276,7 +1582,7 @@ function setupAchievementsSection() {
         stagger: 0.16,
         ease: "power3.out",
       },
-      "-=0.22"
+      "-=0.22",
     )
     .to(
       media,
@@ -1286,7 +1592,7 @@ function setupAchievementsSection() {
         stagger: 0.13,
         ease: "power3.out",
       },
-      "<"
+      "<",
     )
     .to(
       images,
@@ -1297,7 +1603,7 @@ function setupAchievementsSection() {
         stagger: 0.13,
         ease: "power3.out",
       },
-      "<"
+      "<",
     )
     .to(
       content,
@@ -1308,7 +1614,7 @@ function setupAchievementsSection() {
         stagger: 0.035,
         ease: "power2.out",
       },
-      "-=0.62"
+      "-=0.62",
     );
 
   ScrollTrigger.create({
@@ -1330,7 +1636,7 @@ function setupAchievementsSection() {
       () => {
         ScrollTrigger.refresh();
       },
-      { once: true }
+      { once: true },
     );
   });
 
@@ -1362,11 +1668,17 @@ function setupStoryGallery() {
   const clampIndex = (index) => Math.max(0, Math.min(maxIndex, index));
   const clampProgress = (progress) => Math.max(0, Math.min(1, progress));
 
-  const setActiveSlide = (index, progress = maxIndex ? index / maxIndex : 0) => {
+  const setActiveSlide = (
+    index,
+    progress = maxIndex ? index / maxIndex : 0,
+  ) => {
     const nextIndex = clampIndex(index);
 
     if (track) {
-      track.style.setProperty("--progress", `${8 + clampProgress(progress) * 84}%`);
+      track.style.setProperty(
+        "--progress",
+        `${8 + clampProgress(progress) * 84}%`,
+      );
     }
 
     if (nextIndex === activeIndex) return;
@@ -1383,7 +1695,7 @@ function setupStoryGallery() {
 
     if (counter) {
       counter.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(
-        slides.length
+        slides.length,
       ).padStart(2, "0")}`;
     }
 
@@ -1433,7 +1745,7 @@ function setupStoryGallery() {
         start: "top 72%",
         toggleActions: "play none none reverse",
       },
-    }
+    },
   );
 
   if (tags) {
@@ -1451,7 +1763,7 @@ function setupStoryGallery() {
           start: "top 88%",
           toggleActions: "play none none reverse",
         },
-      }
+      },
     );
   }
 
@@ -1471,11 +1783,14 @@ function setupStoryGallery() {
           start: "top 84%",
           toggleActions: "play none none reverse",
         },
-      }
+      },
     );
   }
 
-  const carousel = gsap.timeline({ paused: true, defaults: { ease: "power2.inOut" } });
+  const carousel = gsap.timeline({
+    paused: true,
+    defaults: { ease: "power2.inOut" },
+  });
 
   slides.forEach((slide, index) => {
     gsap.set(slide, { zIndex: index + 1 });
@@ -1499,7 +1814,7 @@ function setupStoryGallery() {
           filter: "blur(10px)",
           duration: 1,
         },
-        index
+        index,
       )
       .fromTo(
         next,
@@ -1519,7 +1834,7 @@ function setupStoryGallery() {
           duration: 1,
           immediateRender: false,
         },
-        index
+        index,
       );
 
     if (currentImage) {
@@ -1530,7 +1845,7 @@ function setupStoryGallery() {
           scale: 1.04,
           duration: 1,
         },
-        index
+        index,
       );
     }
 
@@ -1545,7 +1860,7 @@ function setupStoryGallery() {
           ease: "power2.out",
           immediateRender: false,
         },
-        index
+        index,
       );
     }
   }
@@ -1578,8 +1893,81 @@ function setupStoryGallery() {
       () => {
         ScrollTrigger.refresh();
       },
-      { once: true }
+      { once: true },
     );
+  });
+}
+
+function setupSmartTopNavigation() {
+  const topLinks = document.querySelectorAll(
+    '.brand, a[href="#gateway"], a[href="#top"]',
+  );
+
+  topLinks.forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const isMobile = window.matchMedia(
+        "(max-width: 767px), (pointer: coarse)",
+      ).matches;
+
+      const gateway = document.querySelector("#gateway");
+      const hero = document.querySelector("#hero");
+      const header = document.querySelector(".site-header");
+
+      event.preventDefault();
+
+      // Mobile has no Gateway, so top should be Hero.
+      if (isMobile) {
+        document.documentElement.classList.remove("has-gateway-intro");
+
+        hero?.scrollIntoView({
+          behavior: reducedMotion() ? "auto" : "smooth",
+          block: "start",
+        });
+
+        window.history.replaceState(null, "", "#hero");
+        return;
+      }
+
+      // Desktop should return to the real first landing page.
+      document.documentElement.classList.add("has-gateway-intro");
+
+      if (header && window.gsap) {
+        gsap.set(header, {
+          autoAlpha: 0,
+          y: -18,
+        });
+      }
+
+      // Important: use window scroll, not gateway.scrollIntoView().
+      // Let ScrollTrigger's scrub naturally reverse the gateway animation.
+      if (window.gsap && window.ScrollToPlugin) {
+        gsap.to(window, {
+          scrollTo: 0,
+          duration: 0.6,
+          ease: "power3.inOut",
+          onComplete: () => {
+            if (window.ScrollTrigger) {
+              ScrollTrigger.refresh();
+              ScrollTrigger.update();
+            }
+          },
+        });
+      } else {
+        window.scrollTo({
+          top: 0,
+          behavior: reducedMotion() ? "auto" : "smooth",
+        });
+        setTimeout(() => {
+          if (window.ScrollTrigger) {
+            ScrollTrigger.refresh();
+            ScrollTrigger.update();
+          }
+        }, 600);
+      }
+
+      // Avoid URL staying as #top.
+      window.history.replaceState(null, "", "#gateway");
+    });
   });
 }
 
@@ -1726,7 +2114,7 @@ function setupExperienceJourney() {
         duration: 0.95,
         ease: "back.out(1.35)",
       },
-      0.1
+      0.1,
     )
     .to(
       nodes,
@@ -1736,7 +2124,7 @@ function setupExperienceJourney() {
         stagger: 0.08,
         ease: "back.out(2)",
       },
-      0.45
+      0.45,
     )
     .to(
       tabs,
@@ -1747,7 +2135,7 @@ function setupExperienceJourney() {
         stagger: 0.07,
         ease: "power3.out",
       },
-      0.25
+      0.25,
     )
     .to(
       cards,
@@ -1761,7 +2149,7 @@ function setupExperienceJourney() {
         stagger: 0.13,
         ease: "power3.out",
       },
-      0.34
+      0.34,
     );
 
   gsap.to(".experience-orbit", {
@@ -1781,7 +2169,8 @@ function setupExperienceJourney() {
     start: "top top",
     end: "bottom 48%",
     onUpdate: () => {
-      const userIsInteracting = section.matches(":hover") || section.contains(document.activeElement);
+      const userIsInteracting =
+        section.matches(":hover") || section.contains(document.activeElement);
 
       if (userIsInteracting) return;
 
@@ -1800,7 +2189,10 @@ function setupExperienceJourney() {
       }
 
       const travel = Math.max(1, rect.height - endLine + startLine);
-      const progressValue = Math.max(0, Math.min(1, (startLine - rect.top) / travel));
+      const progressValue = Math.max(
+        0,
+        Math.min(1, (startLine - rect.top) / travel),
+      );
       setActiveExperience(Math.round(progressValue * maxIndex));
     },
   });
@@ -1811,9 +2203,13 @@ function setupEducationExperience() {
   if (!section) return;
 
   const cards = Array.from(section.querySelectorAll("[data-education-card]"));
-  const markers = Array.from(section.querySelectorAll("[data-education-marker]"));
+  const markers = Array.from(
+    section.querySelectorAll("[data-education-marker]"),
+  );
   const progress = section.querySelector("[data-education-progress]");
-  const artLayers = Array.from(section.querySelectorAll(".education-art > span"));
+  const artLayers = Array.from(
+    section.querySelectorAll(".education-art > span"),
+  );
 
   if (!cards.length) return;
 
@@ -1822,7 +2218,9 @@ function setupEducationExperience() {
 
   const setActiveEducation = (index) => {
     const activeIndex = clampIndex(index);
-    const progressValue = maxIndex ? `${(activeIndex / maxIndex) * 100}%` : "100%";
+    const progressValue = maxIndex
+      ? `${(activeIndex / maxIndex) * 100}%`
+      : "100%";
 
     if (progress) {
       progress.style.setProperty("--education-progress", progressValue);
@@ -1914,7 +2312,7 @@ function setupEducationExperience() {
         stagger: 0.1,
         ease: "power3.out",
       },
-      0
+      0,
     )
     .to(
       markers,
@@ -1925,7 +2323,7 @@ function setupEducationExperience() {
         stagger: 0.08,
         ease: "back.out(1.7)",
       },
-      0.12
+      0.12,
     )
     .to(
       cards,
@@ -1938,7 +2336,7 @@ function setupEducationExperience() {
         stagger: 0.13,
         ease: "power3.out",
       },
-      0.22
+      0.22,
     );
 
   gsap.to(".education-art-ring", {
@@ -1958,7 +2356,8 @@ function setupEducationExperience() {
     start: "top top",
     end: "bottom 46%",
     onUpdate: () => {
-      const userIsInteracting = section.matches(":hover") || section.contains(document.activeElement);
+      const userIsInteracting =
+        section.matches(":hover") || section.contains(document.activeElement);
 
       if (userIsInteracting) return;
 
@@ -1977,14 +2376,19 @@ function setupEducationExperience() {
       }
 
       const travel = Math.max(1, rect.height - endLine + startLine);
-      const progressValue = Math.max(0, Math.min(1, (startLine - rect.top) / travel));
+      const progressValue = Math.max(
+        0,
+        Math.min(1, (startLine - rect.top) / travel),
+      );
       setActiveEducation(Math.round(progressValue * maxIndex));
     },
   });
 }
 
 function setupScrollTextReveal() {
-  const titles = document.querySelectorAll(".section-title:not([data-no-scroll-split])");
+  const titles = document.querySelectorAll(
+    ".section-title:not([data-no-scroll-split])",
+  );
   if (!titles.length) return;
 
   titles.forEach((title) => {
@@ -2033,7 +2437,7 @@ function setupScrollTextReveal() {
         const localProgress = gsap.utils.clamp(
           0,
           1,
-          (normalizedProgress * (wordCount + 0.85) - index) / 0.9
+          (normalizedProgress * (wordCount + 0.85) - index) / 0.9,
         );
 
         gsap.set(word, {
@@ -2063,7 +2467,12 @@ function setupScrollTextReveal() {
 }
 
 function setupMagneticButtons() {
-  if (reducedMotion() || !window.gsap || window.matchMedia("(pointer: coarse)").matches) return;
+  if (
+    reducedMotion() ||
+    !window.gsap ||
+    window.matchMedia("(pointer: coarse)").matches
+  )
+    return;
 
   document.querySelectorAll(".button, .header-cta").forEach((button) => {
     button.addEventListener("mousemove", (event) => {
@@ -2092,7 +2501,12 @@ function setupMagneticButtons() {
 
 function setupMarqueeHover() {
   const words = document.querySelectorAll(".marquee-track span");
-  if (!words.length || reducedMotion() || window.matchMedia("(pointer: coarse)").matches) return;
+  if (
+    !words.length ||
+    reducedMotion() ||
+    window.matchMedia("(pointer: coarse)").matches
+  )
+    return;
 
   words.forEach((word) => {
     const activate = () => {
@@ -2105,7 +2519,8 @@ function setupMarqueeHover() {
         y: -4,
         scale: 1.035,
         color: "#ff334e",
-        textShadow: "0 0 12px rgba(255, 51, 78, 0.42), 0 0 24px rgba(255, 78, 205, 0.22)",
+        textShadow:
+          "0 0 12px rgba(255, 51, 78, 0.42), 0 0 24px rgba(255, 78, 205, 0.22)",
         "--mark-opacity": 1,
         "--mark-scale": 1,
         duration: 0.34,
@@ -2144,7 +2559,8 @@ function setupFlyingAccents() {
   const stage = document.querySelector(".ambient-stage");
   if (!stage || reducedMotion()) return;
 
-  if (window.matchMedia("(max-width: 640px), (pointer: coarse)").matches) return;
+  if (window.matchMedia("(max-width: 640px), (pointer: coarse)").matches)
+    return;
 
   const sparkCount = window.innerWidth > 1180 ? 8 : 5;
   const fragment = document.createDocumentFragment();
@@ -2215,9 +2631,12 @@ function setupCardSpotlights() {
   if (window.matchMedia("(pointer: coarse)").matches) return;
 
   const cards = document.querySelectorAll(
-    ".project-card, .experience-card, .capability-card, .contact-card, .hero-metrics div"
+    ".project-card, .experience-card, .capability-card, .contact-card, .hero-metrics div",
   );
-  const canTilt = window.matchMedia("(pointer: fine)").matches && !reducedMotion() && window.gsap;
+  const canTilt =
+    window.matchMedia("(pointer: fine)").matches &&
+    !reducedMotion() &&
+    window.gsap;
 
   cards.forEach((card) => {
     card.addEventListener("pointermove", (event) => {
@@ -2283,7 +2702,7 @@ function setupMobileMenu() {
     gsap.fromTo(
       links,
       { opacity: 0, y: 24 },
-      { opacity: 1, y: 0, duration: 0.5, stagger: 0.07, ease: "power3.out" }
+      { opacity: 1, y: 0, duration: 0.5, stagger: 0.07, ease: "power3.out" },
     );
 
     links[0]?.focus();
@@ -2317,9 +2736,15 @@ function setupMobileMenu() {
       const target = link.getAttribute("href");
       closeMenu({ returnFocus: true });
       if (window.gsap) {
-        gsap.to(window, { duration: 0.6, scrollTo: { y: target }, ease: "power3.inOut" });
+        gsap.to(window, {
+          duration: 0.6,
+          scrollTo: { y: target },
+          ease: "power3.inOut",
+        });
       } else {
-        document.querySelector(target)?.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth" });
+        document
+          .querySelector(target)
+          ?.scrollIntoView({ behavior: reducedMotion() ? "auto" : "smooth" });
       }
     });
   });
@@ -2339,7 +2764,8 @@ function setupMobileMenu() {
 }
 
 function setupChromeTouchScrollSync() {
-  if (!window.ScrollTrigger || !isChromeTouchBrowser() || reducedMotion()) return;
+  if (!window.ScrollTrigger || !isChromeTouchBrowser() || reducedMotion())
+    return;
 
   let updateFrame = 0;
   let refreshTimer = 0;
@@ -2364,11 +2790,19 @@ function setupChromeTouchScrollSync() {
   };
 
   window.addEventListener("scroll", updateScrollTriggers, { passive: true });
-  document.addEventListener("touchmove", updateScrollTriggers, { passive: true });
+  document.addEventListener("touchmove", updateScrollTriggers, {
+    passive: true,
+  });
   document.addEventListener("touchend", refreshAfterTouch, { passive: true });
-  document.addEventListener("touchcancel", refreshAfterTouch, { passive: true });
-  window.addEventListener("orientationchange", refreshAfterTouch, { passive: true });
-  window.visualViewport?.addEventListener("resize", refreshAfterTouch, { passive: true });
+  document.addEventListener("touchcancel", refreshAfterTouch, {
+    passive: true,
+  });
+  window.addEventListener("orientationchange", refreshAfterTouch, {
+    passive: true,
+  });
+  window.visualViewport?.addEventListener("resize", refreshAfterTouch, {
+    passive: true,
+  });
 
   if (document.fonts?.ready) {
     document.fonts.ready.then(refreshAfterTouch).catch(() => {});
@@ -2384,7 +2818,10 @@ function setupChromeTouchScrollSync() {
 function setupMobilePinSpacerCleanup() {
   if (!window.ScrollTrigger || !window.gsap || reducedMotion()) return;
 
-  const mobileLayout = window.matchMedia("(max-width: 980px)");
+  const mobileLayout = window.matchMedia(
+    "(max-width: 767px), (pointer: coarse)"
+  );
+
   let cleanupFrame = 0;
 
   const resetMobileStack = () => {
@@ -2410,17 +2847,55 @@ function setupMobilePinSpacerCleanup() {
   };
 
   const unwrapStalePinSpacers = () => {
+    if (!mobileLayout.matches) return;
+
     let changed = false;
 
     ScrollTrigger.getAll().forEach((trigger) => {
       if (!trigger.pin) return;
+
+      const triggerElement = trigger.trigger;
+      const pinElement = trigger.pin;
+
+      // NEVER kill the Gateway trigger here.
+      if (
+        triggerElement?.id === "gateway" ||
+        pinElement?.id === "gateway" ||
+        pinElement?.closest?.("#gateway")
+      ) {
+        return;
+      }
+
+      // Only clean problematic mobile/tablet pinned sections.
+      const isSkillsPin =
+        triggerElement?.classList?.contains("skills-section") ||
+        pinElement?.classList?.contains("skills-section") ||
+        pinElement?.closest?.(".skills-section");
+
+      if (!isSkillsPin) return;
 
       trigger.kill(true);
       changed = true;
     });
 
     document.querySelectorAll(".pin-spacer").forEach((spacer) => {
-      const pinnedElement = Array.from(spacer.children).find((child) => child.nodeType === 1);
+      const pinnedElement = Array.from(spacer.children).find(
+        (child) => child.nodeType === 1,
+      );
+
+      // Do not unwrap/remove Gateway pin spacer.
+      if (
+        pinnedElement?.id === "gateway" ||
+        pinnedElement?.closest?.("#gateway")
+      ) {
+        return;
+      }
+
+      const isSkillsSpacer =
+        pinnedElement?.classList?.contains("skills-section") ||
+        pinnedElement?.closest?.(".skills-section");
+
+      if (!isSkillsSpacer) return;
 
       if (pinnedElement && spacer.parentNode) {
         spacer.parentNode.insertBefore(pinnedElement, spacer);
@@ -2432,8 +2907,17 @@ function setupMobilePinSpacerCleanup() {
 
     resetMobileStack();
 
+    const header = document.querySelector(".site-header");
+
+    if (header) {
+      gsap.set(header, { autoAlpha: 1, y: 0, clearProps: "visibility" });
+    }
+
     if (changed) {
-      requestAnimationFrame(() => ScrollTrigger.refresh());
+      requestAnimationFrame(() => {
+        ScrollTrigger.refresh();
+        ScrollTrigger.update();
+      });
     }
   };
 
@@ -2449,7 +2933,9 @@ function setupMobilePinSpacerCleanup() {
   queueCleanup();
   window.addEventListener("resize", queueCleanup, { passive: true });
   window.addEventListener("orientationchange", queueCleanup, { passive: true });
-  window.visualViewport?.addEventListener("resize", queueCleanup, { passive: true });
+  window.visualViewport?.addEventListener("resize", queueCleanup, {
+    passive: true,
+  });
 }
 
 function setupMobileFooterScrollClamp() {
@@ -2495,7 +2981,9 @@ function setupMobileFooterScrollClamp() {
   window.addEventListener("scroll", queueClamp, { passive: true });
   window.addEventListener("resize", refreshClamp, { passive: true });
   window.addEventListener("orientationchange", refreshClamp, { passive: true });
-  window.visualViewport?.addEventListener("resize", refreshClamp, { passive: true });
+  window.visualViewport?.addEventListener("resize", refreshClamp, {
+    passive: true,
+  });
 
   if (document.fonts?.ready) {
     document.fonts.ready.then(refreshClamp).catch(() => {});
@@ -2508,23 +2996,144 @@ function setupMobileFooterScrollClamp() {
   }
 }
 
+function loadScriptOnce(src, globalName) {
+  return new Promise((resolve, reject) => {
+    if (globalName && window[globalName]) {
+      resolve();
+      return;
+    }
+
+    const existing = document.querySelector(`script[src="${src}"]`);
+    if (existing) {
+      existing.addEventListener("load", resolve, { once: true });
+      existing.addEventListener("error", reject, { once: true });
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src = src;
+    script.defer = true;
+    script.onload = resolve;
+    script.onerror = reject;
+    document.body.appendChild(script);
+  });
+}
+
+function setupDeveloperSceneLazy() {
+  const hero = document.querySelector("#hero");
+  const canvas = document.querySelector(".developer-canvas");
+
+  if (!hero || !canvas || reducedMotion()) return;
+
+  const isMobile = window.matchMedia("(max-width: 640px), (pointer: coarse)").matches;
+
+  if (isMobile) return;
+
+  const start = async () => {
+    try {
+      await loadScriptOnce(
+        "https://unpkg.com/three@0.160.0/build/three.min.js",
+        "THREE",
+      );
+
+      setupDeveloperScene();
+    } catch (error) {
+      console.warn("Three.js failed to load", error);
+    }
+  };
+
+  if (!("IntersectionObserver" in window)) {
+    start();
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      if (!entry.isIntersecting) return;
+
+      start();
+      observer.disconnect();
+    },
+    {
+      rootMargin: "700px 0px",
+      threshold: 0.01,
+    },
+  );
+
+  observer.observe(hero);
+}
+
+function setupMyWorldGalleryLazy() {
+  const section = document.querySelector("#my-world");
+  if (!section) return;
+
+  const buildGallery = () => {
+    setupMyWorldGallery();
+    setupMyWorldGalleryMotion();
+
+    requestAnimationFrame(() => {
+      if (window.ScrollTrigger) {
+        ScrollTrigger.refresh();
+      }
+    });
+  };
+
+  if (!("IntersectionObserver" in window)) {
+    buildGallery();
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      if (!entry.isIntersecting) return;
+
+      buildGallery();
+      observer.disconnect();
+    },
+    {
+      rootMargin: "900px 0px",
+      threshold: 0.01,
+    },
+  );
+
+  observer.observe(section);
+}
+
+function runWhenIdle(callback, timeout = 1200) {
+  if ("requestIdleCallback" in window) {
+    requestIdleCallback(callback, { timeout });
+    return;
+  }
+
+  setTimeout(callback, 250);
+}
+
 setupCursor();
-setupDeveloperScene();
 setupFlyingAccents();
 setupAnimations();
 setupGatewayIntro();
-setupProjectsEntrance();
-setupSystemFlow();
-setupAchievementsSection();
-setupStackStoryboard();
-setupExperienceJourney();
-setupEducationExperience();
-setupScrollTextReveal();
-setupArtParallax();
-setupMagneticButtons();
-setupMarqueeHover();
-setupCardSpotlights();
+setupSmartTopNavigation();
+setupDeveloperSceneLazy();
+setupMyWorldGalleryLazy();
 setupMobileMenu();
 setupChromeTouchScrollSync();
 setupMobilePinSpacerCleanup();
 setupMobileFooterScrollClamp();
+
+runWhenIdle(() => {
+  setupProjectsEntrance();
+  setupSystemFlow();
+  setupAchievementsSection();
+  setupStackStoryboard();
+  setupExperienceJourney();
+  setupEducationExperience();
+  setupScrollTextReveal();
+  setupArtParallax();
+  setupMagneticButtons();
+  setupMarqueeHover();
+  setupCardSpotlights();
+
+  if (window.ScrollTrigger) {
+    ScrollTrigger.refresh();
+  }
+});

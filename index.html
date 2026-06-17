@@ -47,6 +47,8 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+    <link rel="preconnect" href="https://unpkg.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap"
       rel="stylesheet"
@@ -64,7 +66,7 @@
           "addressLocality": "Cebu City",
           "addressCountry": "PH"
         },
-        "url": "https://johnell-empuerto.github.io/Porfolio/",
+        "url": "https://johnell-empuerto.github.io/portfolio-2026-johnell-empuerto/",
         "sameAs": [
           "https://github.com/Johnell-Empuerto",
           "https://linkedin.com/in/johnell-empuerto-a894a7276"
@@ -85,7 +87,11 @@
       }
     </script>
 
-    <link rel="stylesheet" href="./styles.min.css?v=20260616-gateway-intro" />
+    <script>
+      document.documentElement.classList.add("has-gateway-intro");
+    </script>
+
+    <link rel="stylesheet" href="./styles.min.css?v=20260617" />
   </head>
 
   <body>
@@ -105,7 +111,7 @@
     </div>
 
     <header class="site-header">
-      <a href="#top" class="brand" aria-label="Go to top">
+      <a href="#gateway" class="brand" aria-label="Go to first landing section">
         <span class="brand-mark">JE</span>
         <span>Johnell Empuerto</span>
       </a>
@@ -152,7 +158,11 @@
     </div>
 
     <main id="top">
-      <section class="gateway-section" id="gateway" aria-labelledby="gateway-title">
+      <section
+        class="gateway-section"
+        id="gateway"
+        aria-labelledby="gateway-title"
+      >
         <div class="gateway-shell">
           <div class="gateway-content">
             <p class="gateway-kicker">Digital Operations Gateway</p>
@@ -199,16 +209,22 @@
             </svg>
 
             <div class="gateway-panel gateway-panel-primary">
-              <div class="gateway-panel-bar"><span></span><span></span><span></span></div>
+              <div class="gateway-panel-bar">
+                <span></span><span></span><span></span>
+              </div>
               <strong>Operations Mesh</strong>
               <div class="gateway-chart gateway-chart-main">
                 <i></i><i></i><i></i><i></i><i></i>
               </div>
-              <div class="gateway-panel-row"><span></span><span></span><span></span></div>
+              <div class="gateway-panel-row">
+                <span></span><span></span><span></span>
+              </div>
             </div>
 
             <div class="gateway-panel gateway-panel-secondary">
-              <div class="gateway-panel-bar"><span></span><span></span><span></span></div>
+              <div class="gateway-panel-bar">
+                <span></span><span></span><span></span>
+              </div>
               <strong>Production Signal</strong>
               <div class="gateway-signal-list">
                 <span></span><span></span><span></span><span></span>
@@ -230,10 +246,13 @@
             <span class="gateway-rail rail-one"></span>
             <span class="gateway-rail rail-two"></span>
           </div>
-
         </div>
 
-        <a class="gateway-scroll" href="#hero" aria-label="Scroll to enter portfolio">
+        <a
+          class="gateway-scroll"
+          href="#hero"
+          aria-label="Scroll to enter portfolio"
+        >
           <span>Scroll to enter portfolio</span>
           <i aria-hidden="true"></i>
         </a>
@@ -959,9 +978,28 @@
           <img
             src="./images/img3.png"
             alt="Formal portrait of Johnell Empuerto"
+            loading="lazy"
+            decoding="async"
           />
           <figcaption>Software Engineer</figcaption>
         </figure>
+      </section>
+
+      <section class="section my-world-section" id="my-world">
+        <div class="section-kicker reveal">Personal Gallery</div>
+        <h2 class="section-title my-world-title reveal">
+          What my world looks like
+        </h2>
+        <p class="section-copy my-world-copy reveal">
+          A small collection of moments, places, nature, travel, and everyday
+          scenes outside the code.
+        </p>
+
+        <div
+          class="my-world-gallery"
+          id="my-world-gallery"
+          aria-label="Personal gallery"
+        ></div>
       </section>
 
       <span class="section-anchor" id="skills" aria-hidden="true"></span>
@@ -1330,6 +1368,8 @@
                 <img
                   src="./images/achievement-npax.jpg"
                   alt="Johnell Empuerto receiving the 2025 NPAX Rookie of the Year award"
+                  loading="lazy"
+                  decoding="async"
                 />
               </figure>
               <div class="achievement-content">
@@ -1359,6 +1399,8 @@
                 <img
                   src="./images/achievement-proweaver.png"
                   alt="Johnell Empuerto at Proweaver work station"
+                  loading="lazy"
+                  decoding="async"
                 />
               </figure>
               <div class="achievement-content">
@@ -1519,7 +1561,10 @@
           &mdash; combining clean interfaces with reliable system logic.
         </p>
 
-        <div class="capabilities-grid reveal" aria-label="Developer capabilities">
+        <div
+          class="capabilities-grid reveal"
+          aria-label="Developer capabilities"
+        >
           <article class="capability-card">
             <div class="capability-icon" aria-hidden="true">WP</div>
             <h3>WordPress &amp; Business Websites</h3>
@@ -1658,10 +1703,9 @@
       <a href="#top">Back to top ↑</a>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
-    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-    <script src="./main.min.js?v=20260616-gateway-intro"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js"></script>
+    <script defer src="./main.min.js?v=20260617-performance"></script>
   </body>
 </html>
