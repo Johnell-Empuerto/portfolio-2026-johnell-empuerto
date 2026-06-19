@@ -42,7 +42,6 @@ function setupSectionOrder() {
   if (!main) return;
 
   [
-    document.querySelector("#gateway"),
     document.querySelector("#hero"),
     document.querySelector(".marquee-section"),
     document.querySelector("#projects"),
@@ -63,189 +62,6 @@ function setupSectionOrder() {
 }
 
 setupSectionOrder();
-
-function setupGatewayIntro() {
-  const gateway = document.querySelector("#gateway");
-  if (!gateway) return;
-
-  const isMobile = window.matchMedia(
-    "(max-width: 767px), (pointer: coarse)",
-  ).matches;
-  const header = document.querySelector(".site-header");
-
-  if (isMobile) {
-    document.documentElement.classList.remove("has-gateway-intro");
-
-    if (header) {
-      if (window.gsap) {
-        gsap.set(header, { autoAlpha: 1, y: 0, clearProps: "visibility" });
-      } else {
-        header.style.opacity = "1";
-        header.style.visibility = "visible";
-        header.style.transform = "";
-      }
-    }
-
-    gateway.style.display = "none";
-    return;
-  }
-
-  if (!window.gsap || !window.ScrollTrigger || reducedMotion()) return;
-
-  const shell = gateway.querySelector(".gateway-shell");
-  const scene = gateway.querySelector(".gateway-scene");
-  const content = gateway.querySelector(".gateway-content");
-  const scrollCue = gateway.querySelector(".gateway-scroll");
-  const nodes = gsap.utils.toArray(gateway.querySelectorAll(".gateway-node"));
-  const clamp01 = gsap.utils.clamp(0, 1);
-
-  gsap.registerPlugin(ScrollTrigger);
-
-  gsap.set(shell, {
-    transformPerspective: 1400,
-    transformOrigin: "center center",
-    scale: 1,
-    z: 0,
-  });
-
-  gsap.set([shell, scene, content, scrollCue].filter(Boolean), {
-    willChange: "transform, opacity, filter",
-  });
-
-  const shouldDelayHeader = header && !isMobile;
-
-  if (shouldDelayHeader) {
-    gsap.set(header, { autoAlpha: 0, y: -18 });
-  }
-
-  const updateHeader = (progress) => {
-    if (!shouldDelayHeader) return;
-
-    const visibility = clamp01((progress - 0.62) / 0.24);
-    gsap.set(header, {
-      autoAlpha: visibility,
-      y: gsap.utils.interpolate(-18, 0, visibility),
-    });
-  };
-
-  const updateGatewayState = (progress) => {
-    updateHeader(progress);
-    if (scrollCue) {
-      scrollCue.style.pointerEvents = progress > 0.72 ? "none" : "auto";
-    }
-  };
-
-  const timeline = gsap.timeline({
-    scrollTrigger: {
-      trigger: gateway,
-      start: "top top",
-      end: isMobile ? "bottom top" : "+=100%",
-      scrub: isMobile ? 0.35 : 1,
-      pin: !isMobile,
-      pinSpacing: true,
-      anticipatePin: 1,
-      invalidateOnRefresh: true,
-      onUpdate: (self) => {
-        updateGatewayState(self.progress);
-
-        if (self.progress < 0.62) {
-          document.documentElement.classList.add("has-gateway-intro");
-        } else {
-          document.documentElement.classList.remove("has-gateway-intro");
-        }
-      },
-      onLeave: () => {
-        updateGatewayState(1);
-        document.documentElement.classList.remove("has-gateway-intro");
-      },
-      onEnterBack: (self) => {
-        document.documentElement.classList.add("has-gateway-intro");
-        updateGatewayState(self.progress);
-      },
-      onLeaveBack: () => {
-        document.documentElement.classList.add("has-gateway-intro");
-        updateGatewayState(0);
-
-        gsap.set(shell, {
-          scale: 1,
-          z: 0,
-          rotateX: 0,
-          opacity: 1,
-          filter: "blur(0px)",
-        });
-
-        gsap.set(scene, {
-          yPercent: 0,
-          rotateX: 0,
-        });
-
-        gsap.set(content, {
-          y: 0,
-          opacity: 1,
-        });
-
-        if (scrollCue) {
-          gsap.set(scrollCue, {
-            opacity: 1,
-            y: 0,
-            pointerEvents: "auto",
-          });
-        }
-
-        if (nodes.length) {
-          gsap.set(nodes, { opacity: 1 });
-        }
-      },
-      onRefresh: (self) => updateGatewayState(self.progress),
-    },
-  });
-
-  timeline
-    .to(
-      shell,
-      {
-        scale: isMobile ? 1.08 : 1.28,
-        z: isMobile ? -40 : -220,
-        rotateX: isMobile ? 0 : 4,
-        opacity: 0,
-        filter: isMobile ? "blur(3px)" : "blur(8px)",
-        ease: "none",
-      },
-      0,
-    )
-    .to(
-      scene,
-      {
-        yPercent: isMobile ? -4 : -10,
-        rotateX: isMobile ? 0 : -3,
-        ease: "none",
-      },
-      0,
-    )
-    .to(
-      content,
-      {
-        y: isMobile ? -18 : -42,
-        opacity: isMobile ? 0.2 : 0.03,
-        ease: "none",
-      },
-      0.08,
-    );
-
-  if (scrollCue) {
-    timeline.to(
-      scrollCue,
-      { opacity: 0, y: isMobile ? -10 : -18, ease: "none" },
-      0.05,
-    );
-  }
-
-  if (nodes.length) {
-    timeline.to(nodes, { opacity: 0.12, stagger: 0.01, ease: "none" }, 0.18);
-  }
-
-  requestAnimationFrame(() => ScrollTrigger.refresh());
-}
 
 function setupCursor() {
   if (reducedMotion() || window.matchMedia("(pointer: coarse)").matches) return;
@@ -766,7 +582,9 @@ function setupAnimations() {
   const heroTitle = document.querySelector(".hero-title");
   const heroTitleLines = gsap.utils.toArray(".hero-title .line");
 
-  if (heroTitle && heroTitleLines.length) {
+  const labHeroReveal = Boolean(document.querySelector("#lab-preloader"));
+
+  if (!labHeroReveal && heroTitle && heroTitleLines.length) {
     gsap
       .timeline({ delay: 0.18 })
       .set(heroTitle, {
@@ -836,23 +654,12 @@ function setupAnimations() {
       );
   }
 
-  const gatewayDelaysHeader =
-    document.querySelector("#gateway") &&
-    !window.matchMedia("(max-width: 767px), (pointer: coarse)").matches;
-
-  if (gatewayDelaysHeader) {
-    gsap.set(".site-header", {
-      y: -18,
-      autoAlpha: 0,
-    });
-  } else {
-    gsap.from(".site-header", {
-      y: -24,
-      opacity: 0,
-      duration: 0.9,
-      ease: "power3.out",
-    });
-  }
+  gsap.from(".site-header", {
+    y: -24,
+    opacity: 0,
+    duration: 0.9,
+    ease: "power3.out",
+  });
 
   gsap.utils.toArray(".dev-chip").forEach((chip, index) => {
     gsap.to(chip, {
@@ -1899,50 +1706,27 @@ function setupStoryGallery() {
 }
 
 function setupSmartTopNavigation() {
-  const topLinks = document.querySelectorAll(
-    '.brand, a[href="#gateway"], a[href="#top"]',
-  );
+  const topLinks = document.querySelectorAll('.brand, a[href="#top"]');
 
   topLinks.forEach((link) => {
     link.addEventListener("click", (event) => {
-      const isMobile = window.matchMedia(
-        "(max-width: 767px), (pointer: coarse)",
-      ).matches;
-
-      const gateway = document.querySelector("#gateway");
       const hero = document.querySelector("#hero");
       const header = document.querySelector(".site-header");
 
       event.preventDefault();
-
-      // Mobile has no Gateway, so top should be Hero.
-      if (isMobile) {
-        document.documentElement.classList.remove("has-gateway-intro");
-
-        hero?.scrollIntoView({
-          behavior: reducedMotion() ? "auto" : "smooth",
-          block: "start",
-        });
-
-        window.history.replaceState(null, "", "#hero");
-        return;
+      if (header) {
+        if (window.gsap) {
+          gsap.set(header, { autoAlpha: 1, y: 0, clearProps: "visibility" });
+        } else {
+          header.style.opacity = "1";
+          header.style.visibility = "visible";
+          header.style.transform = "";
+        }
       }
 
-      // Desktop should return to the real first landing page.
-      document.documentElement.classList.add("has-gateway-intro");
-
-      if (header && window.gsap) {
-        gsap.set(header, {
-          autoAlpha: 0,
-          y: -18,
-        });
-      }
-
-      // Important: use window scroll, not gateway.scrollIntoView().
-      // Let ScrollTrigger's scrub naturally reverse the gateway animation.
       if (window.gsap && window.ScrollToPlugin) {
         gsap.to(window, {
-          scrollTo: 0,
+          scrollTo: hero ? hero.offsetTop : 0,
           duration: 0.6,
           ease: "power3.inOut",
           onComplete: () => {
@@ -1953,10 +1737,11 @@ function setupSmartTopNavigation() {
           },
         });
       } else {
-        window.scrollTo({
-          top: 0,
+        hero?.scrollIntoView({
           behavior: reducedMotion() ? "auto" : "smooth",
+          block: "start",
         });
+
         setTimeout(() => {
           if (window.ScrollTrigger) {
             ScrollTrigger.refresh();
@@ -1965,8 +1750,7 @@ function setupSmartTopNavigation() {
         }, 600);
       }
 
-      // Avoid URL staying as #top.
-      window.history.replaceState(null, "", "#gateway");
+      window.history.replaceState(null, "", "#hero");
     });
   });
 }
@@ -2857,15 +2641,6 @@ function setupMobilePinSpacerCleanup() {
       const triggerElement = trigger.trigger;
       const pinElement = trigger.pin;
 
-      // NEVER kill the Gateway trigger here.
-      if (
-        triggerElement?.id === "gateway" ||
-        pinElement?.id === "gateway" ||
-        pinElement?.closest?.("#gateway")
-      ) {
-        return;
-      }
-
       // Only clean problematic mobile/tablet pinned sections.
       const isSkillsPin =
         triggerElement?.classList?.contains("skills-section") ||
@@ -2882,14 +2657,6 @@ function setupMobilePinSpacerCleanup() {
       const pinnedElement = Array.from(spacer.children).find(
         (child) => child.nodeType === 1,
       );
-
-      // Do not unwrap/remove Gateway pin spacer.
-      if (
-        pinnedElement?.id === "gateway" ||
-        pinnedElement?.closest?.("#gateway")
-      ) {
-        return;
-      }
 
       const isSkillsSpacer =
         pinnedElement?.classList?.contains("skills-section") ||
@@ -3111,7 +2878,6 @@ function runWhenIdle(callback, timeout = 1200) {
 setupCursor();
 setupFlyingAccents();
 setupAnimations();
-setupGatewayIntro();
 setupSmartTopNavigation();
 setupDeveloperSceneLazy();
 setupMyWorldGalleryLazy();
@@ -3121,7 +2887,6 @@ setupMobilePinSpacerCleanup();
 setupMobileFooterScrollClamp();
 
 runWhenIdle(() => {
-  setupProjectsEntrance();
   setupSystemFlow();
   setupAchievementsSection();
   setupStackStoryboard();
